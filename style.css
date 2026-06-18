@@ -17,6 +17,8 @@
     --warning: #f59e0b;
     --warning-bg: #fffbeb;
     --purple: #8b5cf6;
+    --orange-light: #fff7ed;
+    --orange-border: #fed7aa;
     
     --dark-bg: #1e293b;
     --dark-sidebar: #0f172a;
@@ -37,6 +39,7 @@
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
     --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
     
     --radius-sm: 6px;
     --radius: 10px;
@@ -115,14 +118,8 @@ header {
     flex-shrink: 0;
 }
 
-.menu-btn:hover {
-    background: rgba(255, 255, 255, 0.18);
-}
-
-.menu-btn:active {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(0.95);
-}
+.menu-btn:hover { background: rgba(255, 255, 255, 0.18); }
+.menu-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.95); }
 
 header h1 {
     font-size: 1rem;
@@ -145,7 +142,7 @@ header h1 {
 }
 
 /* ==========================================
-   4. القائمة الجانبية (Sidebar)
+   4. القائمة الجانبية (Sidebar) مع الأكورديون
    ========================================== */
 .sidebar-overlay {
     position: fixed;
@@ -179,9 +176,7 @@ header h1 {
     box-shadow: var(--shadow-xl);
 }
 
-.sidebar.active {
-    right: 0;
-}
+.sidebar.active { right: 0; }
 
 .sidebar-header {
     display: flex;
@@ -213,48 +208,80 @@ header h1 {
     transition: var(--transition);
 }
 
-.close-btn:hover {
-    background: rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
-}
+.close-btn:hover { background: rgba(239, 68, 68, 0.3); color: #fca5a5; }
 
 /* ✅ محتوى القائمة قابل للتمرير */
 .sidebar-nav {
     flex: 1;
-    padding: 10px 8px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.sidebar-nav::-webkit-scrollbar {
-    width: 4px;
-}
-.sidebar-nav::-webkit-scrollbar-track {
-    background: transparent;
-}
-.sidebar-nav::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 4px;
-}
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
 
-/* مجموعات القائمة */
+/* ✅ مجموعات الأكورديون */
 .nav-group {
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 }
 
+/* ✅ زر عنوان المجموعة (قابل للنقر للفتح والإغلاق) */
 .nav-group-title {
-    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     color: var(--text-muted);
-    padding: 10px 12px 4px 12px;
+    padding: 10px 10px 6px 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: var(--radius-sm);
+    user-select: none;
+    background: none;
+    border: none;
+    width: 100%;
+    font-family: var(--font-main);
+    text-align: right;
 }
 
-/* عناصر القائمة */
+.nav-group-title:hover {
+    color: var(--text-light);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* ✅ أيقونة السهم في الأكورديون */
+.accordion-arrow {
+    font-size: 0.6rem;
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.nav-group.open .accordion-arrow {
+    transform: rotate(180deg);
+}
+
+/* ✅ محتوى المجموعة (الروابط) */
+.nav-group-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0 4px;
+}
+
+.nav-group.open .nav-group-content {
+    max-height: 500px;
+}
+
+/* الروابط الفردية */
 .nav-item {
     display: flex;
     align-items: center;
@@ -280,19 +307,19 @@ header h1 {
     flex-shrink: 0;
 }
 
-.nav-item .nav-label {
-    flex: 1;
-}
+.nav-item .nav-label { flex: 1; }
 
-.nav-item:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: white;
-}
+.nav-item:hover { background: rgba(255, 255, 255, 0.06); color: white; }
 
 .nav-item.active-nav {
     background: rgba(37, 99, 235, 0.2);
     color: white;
     font-weight: 600;
+}
+
+/* ✅ الروابط المباشرة (بدون مجموعة) */
+.nav-item.direct-link {
+    margin: 2px 0;
 }
 
 /* قائمة الإدارة الفرعية */
@@ -322,16 +349,7 @@ header h1 {
     margin-top: 2px;
 }
 
-.danger-btn:hover {
-    background: rgba(239, 68, 68, 0.25) !important;
-    color: #fecaca !important;
-}
-
-.danger-btn.active-nav {
-    background: rgba(239, 68, 68, 0.35) !important;
-    color: #fecaca !important;
-    border-color: rgba(239, 68, 68, 0.5) !important;
-}
+.danger-btn:hover { background: rgba(239, 68, 68, 0.25) !important; color: #fecaca !important; }
 
 /* تذييل القائمة */
 .sidebar-footer {
@@ -431,34 +449,63 @@ main {
     transition: var(--transition);
 }
 
-.icon-btn:hover {
-    background: var(--border-color);
-    color: var(--text-main);
-}
+.icon-btn:hover { background: var(--border-color); color: var(--text-main); }
+.icon-btn:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.95); }
 
-.icon-btn:active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: scale(0.95);
-}
-
-.auto-close-label {
-    display: flex;
+/* ==========================================
+   ✅ 3. مفتاح التبديل (Toggle Switch) بدلاً من Checkbox
+   ========================================== */
+.toggle-switch-label {
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    white-space: nowrap;
     cursor: pointer;
-    font-weight: 500;
+    flex-shrink: 0;
+    height: 28px;
 }
 
-.auto-close-label input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
-    accent-color: var(--primary);
-    cursor: pointer;
+/* إخفاء checkbox الأصلي */
+.toggle-switch-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* شكل المفتاح */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+    transition: var(--transition-slow);
+    border: 2px solid var(--border-color);
+}
+
+/* الدائرة المتحركة */
+.toggle-switch::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    top: 1px;
+    right: 2px;
+    transition: var(--transition-slow);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* الحالة النشطة (مفعل) */
+.toggle-switch-label input:checked + .toggle-switch {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.toggle-switch-label input:checked + .toggle-switch::after {
+    right: 20px;
 }
 
 /* الكاميرا */
@@ -512,12 +559,15 @@ main {
     transform: scale(0.95);
 }
 
+/* ==========================================
+   ✅ 2. زر المنتجات السريعة (بدون إطار منقط)
+   ========================================== */
 .show-popup-btn {
     width: 100%;
-    padding: 9px;
-    background: var(--warning-bg);
-    border: 1.5px dashed var(--warning);
-    color: #92400e;
+    padding: 10px;
+    background: var(--orange-light);
+    border: 1.5px solid var(--orange-border);
+    color: #9a3412;
     font-weight: 700;
     font-size: 0.85rem;
     border-radius: var(--radius);
@@ -526,9 +576,14 @@ main {
     transition: var(--transition);
 }
 
+.show-popup-btn:hover {
+    background: #fed7aa;
+    box-shadow: var(--shadow-sm);
+}
+
 .show-popup-btn:active {
-    background: #fef3c7;
     transform: scale(0.98);
+    background: #fdba74;
 }
 
 /* ==========================================
@@ -562,9 +617,7 @@ td {
     vertical-align: middle;
 }
 
-tr:last-child td {
-    border-bottom: none;
-}
+tr:last-child td { border-bottom: none; }
 
 .empty-cart-msg {
     text-align: center !important;
@@ -573,7 +626,7 @@ tr:last-child td {
     font-size: 0.9rem;
 }
 
-/* ✅ خلية الكمية (مدمجة أفقياً) */
+/* خلية الكمية */
 .qty-cell {
     display: inline-flex;
     align-items: center;
@@ -599,12 +652,7 @@ tr:last-child td {
     line-height: 1;
 }
 
-.qty-btn:active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: scale(0.9);
-}
+.qty-btn:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.9); }
 
 .qty-value {
     display: inline-block;
@@ -628,15 +676,8 @@ tr:last-child td {
     transition: var(--transition);
 }
 
-.delete-btn:hover {
-    background: #fee2e2;
-}
-
-.delete-btn:active {
-    background: var(--danger);
-    color: white;
-    transform: scale(0.95);
-}
+.delete-btn:hover { background: #fee2e2; }
+.delete-btn:active { background: var(--danger); color: white; transform: scale(0.95); }
 
 /* ==========================================
    8. فوتر الدفع (Sticky Checkout)
@@ -684,21 +725,9 @@ tr:last-child td {
     transition: var(--transition);
 }
 
-#checkoutBtn:hover {
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-    transform: translateY(-1px);
-}
-
-#checkoutBtn:active {
-    transform: scale(0.97);
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-}
-
-#checkoutBtn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
+#checkoutBtn:hover { box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4); transform: translateY(-1px); }
+#checkoutBtn:active { transform: scale(0.97); box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
+#checkoutBtn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 /* ==========================================
    9. النوافذ المنبثقة (Modals)
@@ -745,13 +774,10 @@ tr:last-child td {
     color: var(--text-main);
 }
 
-.modal-content p {
-    font-size: 0.85rem;
-}
+.modal-content p { font-size: 0.85rem; }
 
 .modal-content input,
-.modal-content select,
-.modal-content textarea {
+.modal-content select {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 9px;
@@ -776,16 +802,8 @@ tr:last-child td {
     font-size: 0.9rem;
 }
 
-.shift-report hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: 8px 0;
-}
-
-.shift-report h3 {
-    color: var(--primary);
-    font-size: 1rem;
-}
+.shift-report hr { border: none; border-top: 1px solid var(--border-color); margin: 8px 0; }
+.shift-report h3 { color: var(--primary); font-size: 1rem; }
 
 /* القائمة السريعة المنبثقة */
 .quick-popup-grid {
@@ -877,9 +895,7 @@ form select:focus {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
-.form-full-width {
-    grid-column: 1 / -1;
-}
+.form-full-width { grid-column: 1 / -1; }
 
 /* ==========================================
    11. الأزرار (Buttons)
@@ -897,90 +913,30 @@ form select:focus {
     text-align: center;
 }
 
-.btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
+.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn:active { transform: translateY(0) scale(0.97); box-shadow: var(--shadow-xs); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-.btn:active {
-    transform: translateY(0) scale(0.97);
-    box-shadow: var(--shadow-xs);
-}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
 
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #dc2626; }
 
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
+.btn-cancel { background: var(--light-bg); color: var(--text-main); border: 1.5px solid var(--border-color); }
+.btn-cancel:hover { background: var(--border-color); }
 
-.btn-primary:hover {
-    background: var(--primary-hover);
-}
+.btn-outline-primary { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+.btn-outline-primary:hover { background: var(--primary-bg); }
 
-.btn-danger {
-    background: var(--danger);
-    color: white;
-}
+.btn-purple { background: var(--purple); color: white; }
+.btn-purple:hover { background: #7c3aed; }
 
-.btn-danger:hover {
-    background: #dc2626;
-}
+.btn-danger-outline { background: var(--danger-bg); color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-danger-outline:hover { background: #fee2e2; }
 
-.btn-cancel {
-    background: var(--light-bg);
-    color: var(--text-main);
-    border: 1.5px solid var(--border-color);
-}
-
-.btn-cancel:hover {
-    background: var(--border-color);
-}
-
-.btn-outline-primary {
-    background: transparent;
-    border: 1.5px solid var(--primary);
-    color: var(--primary);
-}
-
-.btn-outline-primary:hover {
-    background: var(--primary-bg);
-}
-
-.btn-purple {
-    background: var(--purple);
-    color: white;
-}
-
-.btn-purple:hover {
-    background: #7c3aed;
-}
-
-.btn-danger-outline {
-    background: var(--danger-bg);
-    color: var(--danger);
-    border: 1.5px solid var(--danger);
-}
-
-.btn-danger-outline:hover {
-    background: #fee2e2;
-}
-
-.btn-sm {
-    padding: 7px 12px;
-    font-size: 0.78rem;
-    border-radius: var(--radius-sm);
-}
-
-.btn-block {
-    width: 100%;
-    display: block;
-    margin-top: 6px;
-}
+.btn-sm { padding: 7px 12px; font-size: 0.78rem; border-radius: var(--radius-sm); }
+.btn-block { width: 100%; display: block; margin-top: 6px; }
 
 /* ==========================================
    12. الإحصائيات (Stats)
@@ -998,6 +954,7 @@ form select:focus {
     border-radius: var(--radius);
     text-align: center;
     border-right: 4px solid var(--primary);
+    box-shadow: var(--shadow-card);
 }
 
 .stat-card h4 {
@@ -1014,6 +971,120 @@ form select:focus {
 
 .stat-card:nth-child(2) { border-right-color: var(--danger); }
 .stat-card:nth-child(3) { border-right-color: var(--success); }
+
+/* ==========================================
+   ✅ 4. كروت التقارير الذكية (Smart Analytics Dashboard)
+   ========================================== */
+.analytics-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.dashboard-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dashboard-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.dashboard-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.dashboard-card .card-header .header-icon {
+    font-size: 1.3rem;
+}
+
+/* كارت المنتجات الأكثر مبيعاً */
+.top-sellers-card .card-header {
+    color: #065f46;
+}
+
+.top-sellers-card {
+    border-top: 4px solid var(--success);
+}
+
+/* كارت المنتجات المركونة */
+.dormant-card .card-header {
+    color: #9a3412;
+}
+
+.dormant-card {
+    border-top: 4px solid var(--warning);
+}
+
+/* قائمة داخل الكارت */
+.analytics-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.analytics-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--light-bg);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.analytics-list li:hover {
+    background: var(--border-light);
+}
+
+.analytics-list .item-name {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.analytics-list .item-stat {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* إحصائيات إيجابية */
+.top-sellers-card .item-stat {
+    color: var(--success);
+    background: var(--success-bg);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+}
+
+/* إحصائيات تحذيرية */
+.dormant-card .item-stat {
+    color: #9a3412;
+    background: var(--orange-light);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+}
+
+/* رسالة فارغة */
+.analytics-empty {
+    text-align: center;
+    padding: 16px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
 
 /* ==========================================
    13. الفلاتر والصناديق المميزة
@@ -1049,10 +1120,7 @@ form select:focus {
     margin-bottom: 12px;
 }
 
-.highlight-box h4 {
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
+.highlight-box h4 { margin-bottom: 8px; font-size: 0.9rem; }
 
 /* ==========================================
    14. أدوات مرنة (Flex Utilities)
@@ -1068,7 +1136,7 @@ form select:focus {
 .flex-2 { flex: 2; min-width: 130px; }
 
 /* ==========================================
-   15. إدارة القائمة السريعة في الإدارة
+   15. إدارة القائمة السريعة
    ========================================== */
 .quick-admin-grid {
     display: grid;
@@ -1112,52 +1180,20 @@ form select:focus {
    17. تجاوب الجوال (Mobile Responsive)
    ========================================== */
 @media (max-width: 768px) {
-    .quick-items-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .quick-popup-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    form {
-        grid-template-columns: 1fr;
-    }
-    
-    .modal-content {
-        max-width: 95vw;
-        padding: 16px 12px;
-    }
-    
-    .search-row {
-        gap: 5px;
-    }
-    
-    .icon-btn {
-        width: 36px;
-        height: 36px;
-    }
+    .quick-items-grid { grid-template-columns: repeat(3, 1fr); }
+    .quick-popup-grid { grid-template-columns: repeat(2, 1fr); }
+    form { grid-template-columns: 1fr; }
+    .modal-content { max-width: 95vw; padding: 16px 12px; }
+    .search-row { gap: 5px; }
+    .icon-btn { width: 36px; height: 36px; }
+    .analytics-dashboard { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 400px) {
-    .quick-items-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .quick-popup-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    header h1 {
-        font-size: 0.85rem;
-    }
-    
-    .total-amount {
-        font-size: 1.2rem;
-    }
-    
-    #checkoutBtn {
-        font-size: 1rem;
-        padding: 12px;
-    }
-}
+    .quick-items-grid { grid-template-columns: repeat(2, 1fr); }
+    .quick-popup-grid { grid-template-columns: repeat(2, 1fr); }
+    header h1 { font-size: 0.85rem; }
+    .total-amount { font-size: 1.2rem; }
+    #checkoutBtn { font-size: 1rem; padding: 12px; }
+    .analytics-dashboard { grid-template-columns: 1fr; }
+   }
