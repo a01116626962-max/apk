@@ -27,87 +27,107 @@
         
         <nav class="sidebar-nav">
             
-            <!-- ⚡ العمليات -->
-            <div class="nav-group">
-                <div class="nav-group-title">⚡ العمليات</div>
-                <button id="navPosBtn" class="nav-item active-nav">
-                    <span class="nav-icon">🛒</span>
-                    <span class="nav-label">شاشة البيع</span>
+            <!-- ✅ 1. مجموعة العمليات (Accordion) -->
+            <div class="nav-group open">
+                <button class="nav-group-title" onclick="toggleAccordion(this)">
+                    <span>⚡ العمليات</span>
+                    <span class="accordion-arrow">▼</span>
                 </button>
-                <button id="navCashDropBtn" class="nav-item">
-                    <span class="nav-icon">💵</span>
-                    <span class="nav-label">تسليم نقدية للمدير</span>
-                </button>
-                <button id="navCashierExpBtn" class="nav-item">
-                    <span class="nav-icon">🧾</span>
-                    <span class="nav-label">مصروف كاشير (نثرية)</span>
-                </button>
-            </div>
-            
-            <!-- ⚙️ الإدارة -->
-            <div class="nav-group">
-                <div class="nav-group-title">⚙️ الإدارة</div>
-                <button id="navAdminBtn" class="nav-item">
-                    <span class="nav-icon">🔒</span>
-                    <span class="nav-label">لوحة الإدارة</span>
-                </button>
-                
-                <div id="adminSubMenu" class="admin-sub-menu" style="display: none;">
-                    <button id="navInventoryBtn" class="nav-item active-sub">
-                        <span class="nav-icon">📦</span>
-                        <span class="nav-label">المخزن</span>
+                <div class="nav-group-content">
+                    <button id="navPosBtn" class="nav-item active-nav">
+                        <span class="nav-icon">🛒</span>
+                        <span class="nav-label">شاشة البيع</span>
                     </button>
-                    <button id="navRestockBtn" class="nav-item">
-                        <span class="nav-icon">📥</span>
-                        <span class="nav-label">وضع بضاعة</span>
+                    <button id="navCashDropBtn" class="nav-item">
+                        <span class="nav-icon">💵</span>
+                        <span class="nav-label">تسليم نقدية للمدير</span>
                     </button>
-                    <button id="navQuickItemsAdminBtn" class="nav-item">
-                        <span class="nav-icon">⭐</span>
-                        <span class="nav-label">القائمة السريعة</span>
-                    </button>
-                    <button id="navCashiersBtn" class="nav-item">
-                        <span class="nav-icon">👥</span>
-                        <span class="nav-label">الكاشيرية</span>
+                    <button id="navCashierExpBtn" class="nav-item">
+                        <span class="nav-icon">🧾</span>
+                        <span class="nav-label">مصروف كاشير (نثرية)</span>
                     </button>
                 </div>
             </div>
             
-            <!-- 📊 التقارير -->
+            <!-- ✅ مجموعة الإدارة (Accordion) -->
             <div class="nav-group">
-                <div class="nav-group-title">📊 التقارير</div>
-                <button id="navSalesReportBtn" class="nav-item">
-                    <span class="nav-icon">📈</span>
-                    <span class="nav-label">تقرير المبيعات</span>
+                <button class="nav-group-title" onclick="toggleAccordion(this)">
+                    <span>⚙️ الإدارة</span>
+                    <span class="accordion-arrow">▼</span>
                 </button>
-                <button id="navExpensesReportBtn" class="nav-item">
-                    <span class="nav-icon">📋</span>
-                    <span class="nav-label">تقرير المصروفات</span>
-                </button>
-                <button id="navProfitsReportBtn" class="nav-item">
-                    <span class="nav-icon">💰</span>
-                    <span class="nav-label">تقرير الأرباح</span>
-                </button>
-                <button id="navStatsBtn" class="nav-item">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-label">الإحصائيات العامة</span>
-                </button>
-                <button id="navShiftsBtn" class="nav-item">
-                    <span class="nav-icon">🔄</span>
-                    <span class="nav-label">الورديات السابقة</span>
-                </button>
-                <button id="navInvoicesBtn" class="nav-item">
-                    <span class="nav-icon">🧾</span>
-                    <span class="nav-label">الفواتير</span>
-                </button>
+                <div class="nav-group-content">
+                    <button id="navAdminBtn" class="nav-item">
+                        <span class="nav-icon">🔒</span>
+                        <span class="nav-label">لوحة الإدارة</span>
+                    </button>
+                    
+                    <div id="adminSubMenu" class="admin-sub-menu" style="display: none;">
+                        <button id="navInventoryBtn" class="nav-item active-sub">
+                            <span class="nav-icon">📦</span>
+                            <span class="nav-label">المخزن</span>
+                        </button>
+                        <button id="navRestockBtn" class="nav-item">
+                            <span class="nav-icon">📥</span>
+                            <span class="nav-label">وضع بضاعة</span>
+                        </button>
+                        <button id="navQuickItemsAdminBtn" class="nav-item">
+                            <span class="nav-icon">⭐</span>
+                            <span class="nav-label">القائمة السريعة</span>
+                        </button>
+                        <button id="navCashiersBtn" class="nav-item">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-label">الكاشيرية</span>
+                        </button>
+                    </div>
+                </div>
             </div>
             
-            <!-- 🚨 الوردية -->
+            <!-- ✅ مجموعة التقارير (Accordion) -->
             <div class="nav-group">
-                <div class="nav-group-title">🚨 الوردية</div>
-                <button id="navEndShiftBtn" class="nav-item danger-btn">
-                    <span class="nav-icon">⛔</span>
-                    <span class="nav-label">إنهاء وتقفيل الوردية</span>
+                <button class="nav-group-title" onclick="toggleAccordion(this)">
+                    <span>📊 التقارير</span>
+                    <span class="accordion-arrow">▼</span>
                 </button>
+                <div class="nav-group-content">
+                    <button id="navSalesReportBtn" class="nav-item">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-label">تقرير المبيعات</span>
+                    </button>
+                    <button id="navExpensesReportBtn" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">تقرير المصروفات</span>
+                    </button>
+                    <button id="navProfitsReportBtn" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">تقرير الأرباح</span>
+                    </button>
+                    <button id="navStatsBtn" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">الإحصائيات العامة</span>
+                    </button>
+                    <button id="navShiftsBtn" class="nav-item">
+                        <span class="nav-icon">🔄</span>
+                        <span class="nav-label">الورديات السابقة</span>
+                    </button>
+                    <button id="navInvoicesBtn" class="nav-item">
+                        <span class="nav-icon">🧾</span>
+                        <span class="nav-label">الفواتير</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ✅ مجموعة الوردية (Accordion) -->
+            <div class="nav-group open">
+                <button class="nav-group-title" onclick="toggleAccordion(this)">
+                    <span>🚨 الوردية</span>
+                    <span class="accordion-arrow">▼</span>
+                </button>
+                <div class="nav-group-content">
+                    <button id="navEndShiftBtn" class="nav-item danger-btn">
+                        <span class="nav-icon">⛔</span>
+                        <span class="nav-label">إنهاء وتقفيل الوردية</span>
+                    </button>
+                </div>
             </div>
             
         </nav>
@@ -137,9 +157,10 @@
                     <input type="text" id="barcodeInput" placeholder="مرر الباركود أو اكتب اسم المنتج..." autofocus>
                 </div>
                 <button id="startCameraBtn" class="icon-btn" title="تشغيل الكاميرا">📷</button>
-                <label class="auto-close-label">
+                <!-- ✅ 3. مفتاح التبديل (Toggle Switch) بدون نص -->
+                <label class="toggle-switch-label" title="إغلاق تلقائي بعد القراءة">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
-                    <span>إغلاق تلقائي</span>
+                    <span class="toggle-switch"></span>
                 </label>
             </div>
             
@@ -148,6 +169,7 @@
             
             <!-- القائمة السريعة -->
             <div id="quickItemsGrid" class="quick-items-grid"></div>
+            <!-- ✅ 2. زر مسطح بدون إطار منقط -->
             <button id="showQuickItemsPopupBtn" class="show-popup-btn">
                 📋 عرض قائمة المنتجات السريعة (15 منتج)
             </button>
@@ -267,9 +289,9 @@
                 <div class="flex-row form-full-width">
                     <input type="text" id="prodBarcode" placeholder="الباركود" class="flex-2">
                     <button type="button" id="startProdCameraBtn" class="icon-btn">📷</button>
-                    <label class="auto-close-label">
+                    <label class="toggle-switch-label" title="إغلاق تلقائي">
                         <input type="checkbox" id="autoCloseProdCameraCheckbox">
-                        <span>إغلاق تلقائي</span>
+                        <span class="toggle-switch"></span>
                     </label>
                 </div>
                 <div id="prodReader" class="camera-container form-full-width"></div>
@@ -351,7 +373,7 @@
             </div>
         </section>
 
-        <!-- الإحصائيات -->
+        <!-- ✅ 4. الإحصائيات العامة مع كروت التقارير الذكية -->
         <section id="statsTab" style="display: none;">
             <h3>📊 التقرير المالي للإدارة</h3>
             <div class="stats-grid">
@@ -368,6 +390,31 @@
                     <p id="netProfitStat">0 جنيه</p>
                 </div>
             </div>
+            
+            <!-- ✅ كروت التقارير الذكية -->
+            <div class="analytics-dashboard">
+                <!-- كارت أكثر 5 منتجات مبيعاً -->
+                <div class="dashboard-card top-sellers-card">
+                    <div class="card-header">
+                        <span class="header-icon">🔥</span>
+                        <span>أكثر 5 منتجات مبيعاً</span>
+                    </div>
+                    <ul id="topSellersList" class="analytics-list">
+                        <li class="analytics-empty">جاري تحليل البيانات...</li>
+                    </ul>
+                </div>
+                
+                <!-- كارت المنتجات المركونة -->
+                <div class="dashboard-card dormant-card">
+                    <div class="card-header">
+                        <span class="header-icon">⚠️</span>
+                        <span>منتجات تحتاج تنشيط</span>
+                    </div>
+                    <ul id="dormantProductsList" class="analytics-list">
+                        <li class="analytics-empty">جاري تحليل البيانات...</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <!-- وضع بضاعة -->
@@ -377,9 +424,9 @@
                 <div class="flex-row form-full-width">
                     <input type="text" id="restockBarcode" placeholder="الباركود" class="flex-2">
                     <button type="button" id="startRestockCameraBtn" class="icon-btn">📷</button>
-                    <label class="auto-close-label">
+                    <label class="toggle-switch-label" title="إغلاق تلقائي">
                         <input type="checkbox" id="autoCloseRestockCameraCheckbox">
-                        <span>إغلاق تلقائي</span>
+                        <span class="toggle-switch"></span>
                     </label>
                 </div>
                 <div id="restockReader" class="camera-container form-full-width"></div>
@@ -402,7 +449,7 @@
             <div id="quickItemsAdminList" class="quick-admin-grid"></div>
         </section>
 
-        <!-- تقرير المبيعات -->
+        <!-- باقي التبويبات كما هي دون تغيير -->
         <section id="salesReportTab" style="display: none;">
             <h3>📊 تقرير المبيعات الشامل</h3>
             <div class="filter-bar">
@@ -428,7 +475,6 @@
             </div>
         </section>
 
-        <!-- تقرير المصروفات -->
         <section id="expensesReportTab" style="display: none;">
             <h3>📋 تقرير المصروفات الشامل</h3>
             <div class="filter-bar">
@@ -444,7 +490,6 @@
                 </select>
                 <button class="btn btn-sm btn-primary" onclick="loadExpensesReport(document.getElementById('expensesFilter').value)">تطبيق</button>
             </div>
-            
             <div class="highlight-box">
                 <h4>➕ إضافة مصروف جديد</h4>
                 <div class="flex-row">
@@ -453,7 +498,6 @@
                     <button id="addExpenseFromReportBtn" class="btn btn-sm btn-primary">إضافة</button>
                 </div>
             </div>
-            
             <h4>إجمالي المصروفات: <span id="expensesReportTotal" style="color: var(--danger);">0 جنيه</span></h4>
             <div style="overflow-x: auto;">
                 <table>
@@ -463,7 +507,6 @@
             </div>
         </section>
 
-        <!-- تقرير الأرباح -->
         <section id="profitsReportTab" style="display: none;">
             <h3>💰 تقرير الأرباح</h3>
             <div class="filter-bar">
@@ -487,7 +530,6 @@
             </div>
         </section>
 
-        <!-- الورديات -->
         <section id="shiftsTab" style="display: none;">
             <h3>🔄 سجل الورديات</h3>
             <div style="overflow-x: auto;">
@@ -498,7 +540,6 @@
             </div>
         </section>
 
-        <!-- الفواتير -->
         <section id="invoicesTab" style="display: none;">
             <h3>🧾 الفواتير</h3>
             <h4>إجمالي الفواتير المعروضة: <span id="invoicesTotal" style="color: var(--success);">0 جنيه</span></h4>
