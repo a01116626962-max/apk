@@ -8,6 +8,7 @@
     --primary-hover: #1d4ed8;
     --success-color: #10b981;
     --danger-color: #ef4444;
+    --warning-color: #f59e0b;
     --dark-bg: #1e293b;
     --light-bg: #f8fafc;
     --card-bg: #ffffff;
@@ -47,6 +48,8 @@ header {
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow-md);
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 header h1 {
@@ -261,15 +264,16 @@ tr:hover td {
 /* ==========================================
    9. النافذة المنبثقة (Modal)
    ========================================== */
-#authModal {
+.modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(15, 23, 42, 0.6);
+    background-color: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .modal-content {
@@ -278,6 +282,7 @@ tr:hover td {
     border-radius: var(--radius);
     text-align: center;
     min-width: 350px;
+    max-width: 90vw;
     box-shadow: var(--shadow-md);
 }
 
@@ -317,6 +322,7 @@ tr:hover td {
     top: 0; right: 0; bottom: 0; left: 0;
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     opacity: 0;
     visibility: hidden;
     transition: var(--transition);
@@ -330,7 +336,7 @@ tr:hover td {
 
 .sidebar {
     position: fixed;
-    top: 0; right: -280px; /* مخفية برا الشاشة */
+    top: 0; right: -280px;
     width: 280px;
     height: 100vh;
     background: var(--dark-bg);
@@ -343,7 +349,7 @@ tr:hover td {
 }
 
 .sidebar.active {
-    right: 0; /* تظهر على الشاشة */
+    right: 0;
 }
 
 .sidebar-header {
@@ -404,7 +410,7 @@ tr:hover td {
     bottom: 0;
     background: var(--card-bg);
     padding: 15px 20px;
-    margin: 20px -25px -25px -25px; /* عشان تمدد بعرض الكونتينر */
+    margin: 20px -25px -25px -25px;
     border-top: 1px solid var(--border-color);
     box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.05);
     z-index: 100;
@@ -413,31 +419,20 @@ tr:hover td {
     border-bottom-right-radius: var(--radius);
 }
 
-#startCameraBtn {
+#startCameraBtn, #startProdCameraBtn, #startRestockCameraBtn {
     background-color: var(--text-muted);
     color: white;
     border-radius: var(--radius);
     transition: var(--transition);
 }
 
-#startCameraBtn:hover {
+#startCameraBtn:hover, #startProdCameraBtn:hover, #startRestockCameraBtn:hover {
     background-color: var(--text-main);
 }
 
 /* ==========================================
-   12. تحديثات النوافذ المنبثقة (Modals & Shift)
+   12. أزرار الإلغاء والإغلاق
    ========================================== */
-.modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* أعلى من الـ Sidebar */
-}
-
 .cancel-btn {
     background-color: #cbd5e1;
     color: var(--text-main);
@@ -452,8 +447,8 @@ tr:hover td {
     padding: 5px 10px;
     border-radius: 20px;
     font-weight: bold;
+    font-size: 0.9rem;
 }
-
 
 /* ==========================================
    13. القائمة المنسدلة للإدارة في القائمة الجانبية
@@ -462,7 +457,7 @@ tr:hover td {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding-right: 20px; /* إزاحة للداخل لتبدو كقائمة فرعية */
+    padding-right: 20px;
     border-right: 2px solid var(--primary-color);
     margin-right: 15px;
     margin-bottom: 15px;
@@ -479,4 +474,83 @@ tr:hover td {
 .admin-sub-menu button:hover, .admin-sub-menu button.active-sub {
     color: white;
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================
+   14. إضافات جديدة (Checkbox، أزرار سريعة، الخ)
+   ========================================== */
+
+/* أزرار القائمة السريعة في شاشة البيع */
+#quickItemsGrid button {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#quickItemsGrid button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+#quickItemsGrid button img {
+    max-width: 40px;
+    max-height: 40px;
+    margin-bottom: 5px;
+}
+
+/* تحسين شكل Checkbox */
+label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+/* تنسيق العناصر في إدارة القائمة السريعة */
+#quickItemsAdminList > div {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#quickItemsAdminList img {
+    max-width: 80px;
+    max-height: 80px;
+    display: block;
+    margin: 5px auto;
+}
+
+/* تحسين التجاوب */
+@media (max-width: 768px) {
+    header {
+        padding: 10px 15px;
+    }
+    
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-content {
+        min-width: auto;
+        width: 90vw;
+        padding: 20px;
+    }
+    
+    form {
+        grid-template-columns: 1fr;
+    }
+    
+    #quickItemsGrid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
 }
