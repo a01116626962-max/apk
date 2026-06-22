@@ -17,8 +17,14 @@
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
     <aside id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h2>القائمة</h2>
-            <button id="closeSidebarBtn" class="close-btn">✕</button>
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <h2>القائمة</h2>
+        <!-- ✅ شارة الاشتراك -->
+        <span id="subscriptionBadge" class="subscription-badge-mini active-subscription" style="display: none;">
+            <span id="remainingDaysText">--</span>
+        </span>
+    </div>
+    <button id="closeSidebarBtn" class="close-btn">✕</button>
         </div>
         
         <nav class="sidebar-nav">
@@ -125,15 +131,6 @@
                 </div>
             </div>
             
-            <!-- ✅ شارة الاشتراك -->
-            <a id="subscriptionBadge" class="subscription-badge active-subscription" href="subscribe.html" style="display: none;">
-                <span class="badge-icon">✅</span>
-                <span class="badge-text">
-                    <span>النسخة كاملة</span>
-                    <br>
-                    <span id="remainingDaysText" class="badge-days">متبقي -- يوم</span>
-                </span>
-            </a>
             
         </nav>
         
