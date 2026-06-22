@@ -1162,31 +1162,53 @@ async function checkSubscription() {
 
 function updateSubscriptionUI(remainingDays) {
     const badge = document.getElementById('subscriptionBadge');
-    const daysText = document.getElementById('remainingDaysText');
     
-    if (!badge || !daysText) return;
+    if (!badge) return;
     
-    badge.style.display = 'flex';
+    badge.style.display = 'inline-flex';
     
     if (remainingDays > 3) {
-        badge.className = 'subscription-badge active-subscription';
-        badge.querySelector('.badge-icon').textContent = '✅';
-        daysText.textContent = `متبقي ${remainingDays} يوم`;
+        // ✅ اشتراك فعال - أخضر - دائماً قابل للضغط
+        badge.className = 'subscription-badge-mini active-subscription';
+        badge.textContent = `${remainingDays} يوم`;
+        badge.setAttribute('href', 'subscribe.html');
+        badge.title = `الاشتراك فعال - متبقي ${remainingDays} يوم - اضغط لإضافة كود جديد`;
+        badge.style.cursor = 'pointer';
+        badge.onclick = function(e) {
+            e.preventDefault();
+            window.location.href = 'subscribe.html';
+        };
     } else if (remainingDays >= 1 && remainingDays <= 3) {
-        badge.className = 'subscription-badge warning-subscription';
-        badge.querySelector('.badge-icon').textContent = '⚠️';
-        daysText.textContent = `متبقي ${remainingDays} أيام فقط`;
+        // ⚠️ اشتراك قارب على الانتهاء - أحمر نابض
+        badge.className = 'subscription-badge-mini warning-subscription';
+        badge.textContent = `⚠️ ${remainingDays}`;
+        badge.setAttribute('href', 'subscribe.html');
+        badge.title = `تنبيه: متبقي ${remainingDays} أيام فقط - اضغط للتجديد`;
+        badge.style.cursor = 'pointer';
+        badge.onclick = function(e) {
+            e.preventDefault();
+            window.location.href = 'subscribe.html';
+        };
         
+        // إظهار مودال التحذير
         document.getElementById('warningDaysLeft').textContent = remainingDays;
         document.getElementById('subscriptionWarningModal').style.display = 'flex';
     } else if (remainingDays <= 0) {
-        badge.className = 'subscription-badge warning-subscription';
-        badge.querySelector('.badge-icon').textContent = '❌';
-        daysText.textContent = 'منتهي الصلاحية';
+        // ❌ اشتراك منتهي - أحمر غامق
+        badge.className = 'subscription-badge-mini expired-subscription';
+        badge.textContent = '❌ منتهي';
+        badge.setAttribute('href', 'subscribe.html');
+        badge.title = 'الاشتراك منتهي - اضغط للتجديد';
+        badge.style.cursor = 'pointer';
+        badge.onclick = function(e) {
+            e.preventDefault();
+            window.location.href = 'subscribe.html';
+        };
         
+        // طرد إجباري بعد 3 ثواني
         setTimeout(() => {
             window.location.href = 'subscribe.html';
-        }, 2000);
+        }, 3000);
         
         alert("❌ انتهت صلاحية اشتراكك. سيتم توجيهك لصفحة التجديد.");
     }
