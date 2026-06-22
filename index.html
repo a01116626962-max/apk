@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة السوبر ماركت</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- ملف CSS خارجي -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ========== الأصوات ========== -->
-    <audio id="successSound" src="success.mp3" preload="auto"></audio>
-<audio id="errorSound" src="error.mp3" preload="auto"></audio>
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="https://assets.mixkit.co/active_storage/sfx/2954/2954-preview.mp3" preload="auto"></audio>
 
     <!-- ========== القائمة الجانبية ========== -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
@@ -27,7 +23,7 @@
         
         <nav class="sidebar-nav">
             
-            <!-- ✅ 1. مجموعة العمليات (Accordion) -->
+            <!-- ⚡ العمليات -->
             <div class="nav-group open">
                 <button class="nav-group-title" onclick="toggleAccordion(this)">
                     <span>⚡ العمليات</span>
@@ -49,7 +45,7 @@
                 </div>
             </div>
             
-            <!-- ✅ مجموعة الإدارة (Accordion) -->
+            <!-- ⚙️ الإدارة -->
             <div class="nav-group">
                 <button class="nav-group-title" onclick="toggleAccordion(this)">
                     <span>⚙️ الإدارة</span>
@@ -60,7 +56,6 @@
                         <span class="nav-icon">🔒</span>
                         <span class="nav-label">لوحة الإدارة</span>
                     </button>
-                    
                     <div id="adminSubMenu" class="admin-sub-menu" style="display: none;">
                         <button id="navInventoryBtn" class="nav-item active-sub">
                             <span class="nav-icon">📦</span>
@@ -82,7 +77,7 @@
                 </div>
             </div>
             
-            <!-- ✅ مجموعة التقارير (Accordion) -->
+            <!-- 📊 التقارير -->
             <div class="nav-group">
                 <button class="nav-group-title" onclick="toggleAccordion(this)">
                     <span>📊 التقارير</span>
@@ -116,7 +111,7 @@
                 </div>
             </div>
             
-            <!-- ✅ مجموعة الوردية (Accordion) -->
+            <!-- 🚨 الوردية -->
             <div class="nav-group open">
                 <button class="nav-group-title" onclick="toggleAccordion(this)">
                     <span>🚨 الوردية</span>
@@ -129,6 +124,16 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- ✅ شارة الاشتراك -->
+            <a id="subscriptionBadge" class="subscription-badge active-subscription" href="subscribe.html" style="display: none;">
+                <span class="badge-icon">✅</span>
+                <span class="badge-text">
+                    <span>النسخة كاملة</span>
+                    <br>
+                    <span id="remainingDaysText" class="badge-days">متبقي -- يوم</span>
+                </span>
+            </a>
             
         </nav>
         
@@ -147,54 +152,39 @@
         <div id="shiftInfoDisplay">لم تبدأ وردية بعد</div>
     </header>
 
-    <!-- ========== شاشة البيع الرئيسية ========== -->
+    <!-- ========== شاشة البيع ========== -->
     <main id="posSection">
         <div class="pos-container">
             
-            <!-- شريط البحث -->
             <div class="search-row">
                 <div class="search-input-wrapper">
                     <input type="text" id="barcodeInput" placeholder="مرر الباركود أو اكتب اسم المنتج..." autofocus>
                 </div>
                 <button id="startCameraBtn" class="icon-btn" title="تشغيل الكاميرا">📷</button>
-                <!-- ✅ 3. مفتاح التبديل (Toggle Switch) بدون نص -->
                 <label class="toggle-switch-label" title="إغلاق تلقائي بعد القراءة">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
                     <span class="toggle-switch"></span>
                 </label>
             </div>
             
-            <!-- الكاميرا -->
             <div id="reader" class="camera-container"></div>
             
-            <!-- القائمة السريعة -->
             <div id="quickItemsGrid" class="quick-items-grid"></div>
-            <!-- ✅ 2. زر مسطح بدون إطار منقط -->
             <button id="showQuickItemsPopupBtn" class="show-popup-btn">
                 📋 عرض قائمة المنتجات السريعة (15 منتج)
             </button>
             
-            <!-- جدول السلة -->
             <div class="cart-area">
                 <table id="cartTable">
                     <thead>
-                        <tr>
-                            <th>المنتج</th>
-                            <th>السعر</th>
-                            <th>الكمية</th>
-                            <th>الإجمالي</th>
-                            <th>حذف</th>
-                        </tr>
+                        <tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th>حذف</th></tr>
                     </thead>
                     <tbody id="cartBody">
-                        <tr>
-                            <td colspan="5" class="empty-cart-msg">السلة فارغة</td>
-                        </tr>
+                        <tr><td colspan="5" class="empty-cart-msg">السلة فارغة</td></tr>
                     </tbody>
                 </table>
             </div>
             
-            <!-- فوتر الدفع -->
             <div class="checkout-area">
                 <div class="total-row">
                     <span>الإجمالي المطلوب:</span>
@@ -206,7 +196,7 @@
         </div>
     </main>
 
-    <!-- ========== النوافذ المنبثقة ========== -->
+    <!-- ========== المودالات ========== -->
     
     <!-- دخول المدير -->
     <div id="authModal" class="modal" style="display: none;">
@@ -279,10 +269,22 @@
         </div>
     </div>
 
+    <!-- ✅ مودال تحذير الاشتراك -->
+    <div id="subscriptionWarningModal" class="modal subscription-warning-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="warning-icon">⚠️</div>
+            <h2>تنبيه هام</h2>
+            <p>اشتراكك قارب على الانتهاء</p>
+            <p class="days-left">متبقي <span id="warningDaysLeft">0</span> أيام فقط</p>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">يرجى التجديد لتجنب توقف النظام</p>
+            <a href="subscribe.html" class="btn btn-danger btn-block" style="text-decoration: none;">🔑 تجديد الاشتراك الآن</a>
+            <button id="closeWarningBtn" class="btn btn-cancel btn-block" style="margin-top: 8px;">متابعة للنظام</button>
+        </div>
+    </div>
+
     <!-- ========== لوحة الإدارة ========== -->
     <main id="adminSection" style="display: none;">
         
-        <!-- المخزن -->
         <section id="inventoryTab">
             <h3>📦 إضافة منتج جديد للمخزن</h3>
             <form id="addProductForm">
@@ -308,43 +310,26 @@
                 <button id="navLowStockBtn" class="btn btn-danger-outline flex-1">⚠️ نواقص المخزون</button>
             </div>
             
-            <h3>المنتجات المتوفرة (النواقص تظهر باللون الأحمر)</h3>
+            <h3>المنتجات المتوفرة</h3>
             <div style="overflow-x: auto;">
                 <table id="inventoryTable">
-                    <thead>
-                        <tr>
-                            <th>الباركود</th>
-                            <th>المنتج</th>
-                            <th>الكمية</th>
-                            <th>سعر الشراء</th>
-                            <th>سعر البيع</th>
-                            <th>تعديل/حذف</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryBody">
-                        <tr><td colspan="6" style="text-align: center;">جاري التحميل...</td></tr>
-                    </tbody>
+                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية</th><th>سعر الشراء</th><th>سعر البيع</th><th>تعديل/حذف</th></tr></thead>
+                    <tbody id="inventoryBody"><tr><td colspan="6">جاري التحميل...</td></tr></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- نواقص المخزون -->
         <section id="lowStockTab" style="display: none;">
-            <h3>⚠️ نواقص المخزون (بضاعة قاربت على الانتهاء)</h3>
+            <h3>⚠️ نواقص المخزون</h3>
             <p style="color: var(--text-secondary); margin-bottom: 12px;">المنتجات التي وصلت للحد الأدنى أو أقل</p>
             <div style="overflow-x: auto;">
                 <table>
-                    <thead>
-                        <tr><th>الباركود</th><th>المنتج</th><th>الكمية الحالية</th><th>حد التنبيه</th><th>الحالة</th></tr>
-                    </thead>
-                    <tbody id="lowStockBody">
-                        <tr><td colspan="5" style="text-align: center;">جاري التحميل...</td></tr>
-                    </tbody>
+                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية الحالية</th><th>حد التنبيه</th><th>الحالة</th></tr></thead>
+                    <tbody id="lowStockBody"><tr><td colspan="5">جاري التحميل...</td></tr></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- المصروفات -->
         <section id="expensesTab" style="display: none;">
             <h3>تسجيل مصروف يومي</h3>
             <form id="addExpenseForm">
@@ -354,7 +339,6 @@
             </form>
         </section>
 
-        <!-- الكاشيرية -->
         <section id="cashiersTab" style="display: none;">
             <h3>إضافة كاشير جديد للنظام</h3>
             <form id="addCashierForm">
@@ -366,58 +350,31 @@
             <div style="overflow-x: auto;">
                 <table>
                     <thead><tr><th>اسم الكاشير</th><th>كلمة المرور</th><th>إجراء</th></tr></thead>
-                    <tbody id="cashiersBody">
-                        <tr><td colspan="3" style="text-align: center;">جاري التحميل...</td></tr>
-                    </tbody>
+                    <tbody id="cashiersBody"><tr><td colspan="3">جاري التحميل...</td></tr></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- ✅ 4. الإحصائيات العامة مع كروت التقارير الذكية -->
         <section id="statsTab" style="display: none;">
             <h3>📊 التقرير المالي للإدارة</h3>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>إجمالي مبيعات الفواتير</h4>
-                    <p id="totalSalesStat">0 جنيه</p>
-                </div>
-                <div class="stat-card">
-                    <h4>إجمالي المصروفات</h4>
-                    <p id="totalExpensesStat">0 جنيه</p>
-                </div>
-                <div class="stat-card">
-                    <h4>صافي الربح</h4>
-                    <p id="netProfitStat">0 جنيه</p>
-                </div>
+                <div class="stat-card"><h4>إجمالي مبيعات الفواتير</h4><p id="totalSalesStat">0 جنيه</p></div>
+                <div class="stat-card"><h4>إجمالي المصروفات</h4><p id="totalExpensesStat">0 جنيه</p></div>
+                <div class="stat-card"><h4>صافي الربح</h4><p id="netProfitStat">0 جنيه</p></div>
             </div>
             
-            <!-- ✅ كروت التقارير الذكية -->
             <div class="analytics-dashboard">
-                <!-- كارت أكثر 5 منتجات مبيعاً -->
                 <div class="dashboard-card top-sellers-card">
-                    <div class="card-header">
-                        <span class="header-icon">🔥</span>
-                        <span>أكثر 5 منتجات مبيعاً</span>
-                    </div>
-                    <ul id="topSellersList" class="analytics-list">
-                        <li class="analytics-empty">جاري تحليل البيانات...</li>
-                    </ul>
+                    <div class="card-header"><span class="header-icon">🔥</span><span>أكثر 5 منتجات مبيعاً</span></div>
+                    <ul id="topSellersList" class="analytics-list"><li class="analytics-empty">جاري تحليل البيانات...</li></ul>
                 </div>
-                
-                <!-- كارت المنتجات المركونة -->
                 <div class="dashboard-card dormant-card">
-                    <div class="card-header">
-                        <span class="header-icon">⚠️</span>
-                        <span>منتجات تحتاج تنشيط</span>
-                    </div>
-                    <ul id="dormantProductsList" class="analytics-list">
-                        <li class="analytics-empty">جاري تحليل البيانات...</li>
-                    </ul>
+                    <div class="card-header"><span class="header-icon">⚠️</span><span>منتجات تحتاج تنشيط</span></div>
+                    <ul id="dormantProductsList" class="analytics-list"><li class="analytics-empty">جاري تحليل البيانات...</li></ul>
                 </div>
             </div>
         </section>
 
-        <!-- وضع بضاعة -->
         <section id="restockTab" style="display: none;">
             <h3>📥 تزويد بضاعة (Restock)</h3>
             <form id="restockForm">
@@ -438,7 +395,6 @@
             </form>
         </section>
 
-        <!-- القائمة السريعة -->
         <section id="quickItemsAdminTab" style="display: none;">
             <h3>⭐ إدارة القائمة السريعة (أزرار البيع السريع)</h3>
             <p style="color: var(--text-secondary);">اختر حتى 15 منتجًا لعرضهم في شاشة البيع الرئيسية مع إمكانية إضافة صور لهم.</p>
@@ -449,7 +405,6 @@
             <div id="quickItemsAdminList" class="quick-admin-grid"></div>
         </section>
 
-        <!-- باقي التبويبات كما هي دون تغيير -->
         <section id="salesReportTab" style="display: none;">
             <h3>📊 تقرير المبيعات الشامل</h3>
             <div class="filter-bar">
@@ -553,7 +508,6 @@
 
     </main>
 
-    <!-- ========== المكتبات ========== -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script type="module" src="app.js"></script>
 
