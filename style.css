@@ -318,57 +318,53 @@ header h1 {
 
 .danger-btn:hover { background: rgba(239, 68, 68, 0.25) !important; color: #fecaca !important; }
 
-/* ✅ شارة الاشتراك */
-.subscription-badge {
-    display: flex;
+/* ==========================================
+   ✅ شارة الاشتراك المصغرة (بجانب كلمة القائمة)
+   ========================================== */
+.subscription-badge-mini {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    margin: 8px 10px;
-    border-radius: var(--radius);
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.65rem;
+    font-weight: 700;
     cursor: pointer;
     transition: var(--transition);
-    font-family: var(--font-main);
-    font-size: 0.78rem;
-    font-weight: 700;
     text-decoration: none;
-    border: 1.5px solid transparent;
+    white-space: nowrap;
+    min-width: 40px;
+    height: 22px;
+    line-height: 1;
 }
 
-.subscription-badge.active-subscription {
-    background: rgba(16, 185, 129, 0.12);
-    border-color: rgba(16, 185, 129, 0.3);
+.subscription-badge-mini.active-subscription {
+    background: rgba(16, 185, 129, 0.2);
     color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.subscription-badge.warning-subscription {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.3);
+.subscription-badge-mini.warning-subscription {
+    background: rgba(239, 68, 68, 0.2);
     color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
     animation: pulse-warning 2s infinite;
+}
+
+.subscription-badge-mini.expired-subscription {
+    background: rgba(239, 68, 68, 0.3);
+    color: #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.5);
 }
 
 @keyframes pulse-warning {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    50% { opacity: 0.6; }
 }
 
-.subscription-badge .badge-icon { font-size: 1rem; }
-
-.subscription-badge .badge-text {
-    flex: 1;
-    text-align: right;
-    line-height: 1.3;
-}
-
-.subscription-badge .badge-days {
-    font-size: 0.85rem;
-    font-weight: 800;
-}
-
-.subscription-badge:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+.subscription-badge-mini:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 /* مودال تحذير الاشتراك */
