@@ -2,268 +2,287 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفعيل الاشتراك - نظام السوبر ماركت</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تفعيل ترخيص النظام</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #070a13;
+            --card-bg: rgba(30, 41, 59, 0.45);
+            --border-glow: rgba(255, 255, 255, 0.06);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* ألوان افتراضية سيتم التحكم بها ديناميكياً */
+            --primary-glow: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            --shadow-glow: rgba(37, 99, 235, 0.25);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
+            background: var(--bg-color);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            direction: rtl;
+            overflow: hidden;
+            position: relative;
             user-select: none;
             -webkit-user-select: none;
         }
         
+        /* تأثير الإضاءة الخلفية النيون المتناثرة */
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 60% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+                radial-gradient(circle at 15% 15%, var(--shadow-glow) 0%, transparent 60%),
+                radial-gradient(circle at 85% 85%, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
+            transition: all 0.5s ease;
         }
         
         .container {
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 440px;
+            max-width: 420px;
+            animation: appAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes appAppear {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
         
         .subscribe-card {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 35px 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+            border: 1px solid var(--border-glow);
             text-align: center;
-            animation: fadeInUp 0.5s ease;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            border-radius: 50%;
+            width: 76px;
+            height: 76px;
+            background: var(--primary-gradient);
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            margin: 0 auto 24px;
+            font-size: 2.2rem;
+            box-shadow: 0 12px 30px var(--shadow-glow);
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        /* شارة نوع النظام الزجاجية الفاخرة */
+        .type-badge {
+            position: absolute;
+            bottom: -8px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(5px);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 2px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         
         .subscribe-card h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #f1f5f9;
-            margin-bottom: 8px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
         }
         
         .subtitle {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 25px;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.6;
         }
         
-        /* حالة الاشتراك الحالية */
+        /* لوحة حالة الاشتراك الحالية الحية */
         .current-status {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 24px;
             font-size: 0.85rem;
-            color: #94a3b8;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
         
         .current-status strong {
-            color: #6ee7b7;
-            font-size: 1rem;
+            color: #10b981;
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin: 0 4px;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
         }
         
         .input-group {
-            position: relative;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            text-align: right;
         }
         
         .input-group label {
             display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
             margin-bottom: 8px;
-            text-align: right;
+            padding-right: 4px;
         }
         
         .input-group input {
             width: 100%;
-            padding: 14px 16px;
-            background: #334155;
-            border: 2px solid #475569;
-            border-radius: 12px;
-            color: #f1f5f9;
-            font-size: 1.1rem;
-            font-family: 'Cairo', sans-serif;
-            text-align: center;
-            letter-spacing: 3px;
-            transition: all 0.3s ease;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: left;
+            direction: ltr;
+            letter-spacing: 2px;
+            transition: all 0.25s ease;
             outline: none;
         }
         
         .input-group input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-            background: #3b4252;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 20px var(--shadow-glow);
+            background: rgba(0, 0, 0, 0.4);
         }
         
         .input-group input::placeholder {
-            color: #64748b;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
+            color: #475569;
+            letter-spacing: 0px;
+            font-size: 0.95rem;
+            text-align: center;
         }
         
         .activate-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            padding: 16px;
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 800;
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 8px 25px var(--shadow-glow);
             margin-top: 15px;
         }
         
         .activate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-        }
-        
-        .activate-btn:active {
-            transform: translateY(0);
+            box-shadow: 0 12px 30px var(--shadow-glow);
+            filter: brightness(1.1);
         }
         
         .activate-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
+            filter: none;
         }
         
         .loader {
             display: none;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
             border-top-color: white;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
             margin: 0 auto;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
-        .activate-btn.loading .btn-text {
-            display: none;
-        }
+        .activate-btn.loading .btn-text { display: none; }
+        .activate-btn.loading .loader { display: block; }
         
-        .activate-btn.loading .loader {
-            display: block;
-        }
-        
+        /* لوحات الرسائل الزجاجية */
         .message {
             display: none;
             padding: 14px;
             border-radius: 12px;
-            margin-top: 15px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            animation: fadeIn 0.3s ease;
+            margin-top: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            animation: fadeIn 0.2s ease;
+            text-align: center;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .message.success {
             display: block;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1.5px solid rgba(16, 185, 129, 0.3);
-            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: #34d399;
         }
         
         .message.error {
             display: block;
-            background: rgba(239, 68, 68, 0.12);
-            border: 1.5px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #f87171;
         }
         
         .back-link {
-            display: block;
-            margin-top: 20px;
-            color: #94a3b8;
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 0.85rem;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
         
-        .back-link:hover {
-            color: #f1f5f9;
-        }
+        .back-link:hover { color: #fff; }
         
         .contact-info {
-            margin-top: 20px;
+            margin-top: 24px;
             padding-top: 20px;
-            border-top: 1px solid #334155;
+            border-top: 1px solid rgba(255,255,255,0.05);
             font-size: 0.8rem;
-            color: #64748b;
+            color: #475569;
+            font-weight: 600;
         }
         
         .contact-info a {
-            color: #2563eb;
+            color: var(--primary-glow);
             text-decoration: none;
-        }
-        
-        @media (max-width: 480px) {
-            .subscribe-card {
-                padding: 25px 18px;
-            }
-            
-            .subscribe-card h1 {
-                font-size: 1.3rem;
-            }
-            
-            .input-group input {
-                font-size: 1rem;
-                padding: 12px 14px;
-            }
+            margin-right: 4px;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -271,59 +290,76 @@
     
     <div class="container">
         <div class="subscribe-card">
-            <!-- شعار -->
-            <div class="logo-icon">🔐</div>
             
-            <h1>تفعيل الاشتراك</h1>
-            <p class="subtitle">أدخل كود التفعيل الخاص بك لإضافة أيام جديدة لاشتراكك</p>
-            
-            <!-- ✅ حالة الاشتراك الحالية -->
-            <div class="current-status" id="currentSubscriptionInfo">
-                جاري تحميل معلومات الاشتراك...
+            <div class="logo-icon" id="ui-logo-icon">
+                🔐
+                <div class="type-badge" id="ui-type-badge">PRO</div>
             </div>
             
-            <!-- حقل كود التفعيل -->
+            <h1>تفعيل الترخيص</h1>
+            <p class="subtitle">أدخل كود الشحن لإضافة أيام جديدة لرصيد نظامك</p>
+            
+            <div class="current-status" id="currentSubscriptionInfo">
+                ⏳ جاري التحقق المطور من الصلاحية...
+            </div>
+            
             <div class="input-group">
-                <label for="code">كود التفعيل</label>
+                <label for="code">كود الشحن المعتمد</label>
                 <input 
                     type="text" 
                     id="code" 
-                    placeholder="XXXX-XXXX-XXXX-XXXX" 
-                    maxlength="19" 
+                    placeholder="PRO-XXXX-XXXX-XXXX" 
                     autocomplete="off"
                 >
             </div>
             
-            <!-- زر التفعيل -->
             <button id="activateBtn" class="activate-btn">
-                <span class="btn-text">🚀 تفعيل الاشتراك</span>
+                <span class="btn-text">🚀 شحن رصيد النظام</span>
                 <div class="loader"></div>
             </button>
             
-            <!-- رسالة النتيجة -->
             <div id="msg" class="message"></div>
             
-            <!-- رابط العودة -->
-            <a href="index.html" class="back-link">← العودة للنظام</a>
+            <a href="index.html" class="back-link">← العودة للنظام الرئيسية</a>
             
-            <!-- معلومات الاتصال -->
             <div class="contact-info">
-                <p>تحتاج مساعدة؟ تواصل مع الدعم الفني</p>
-                <a href="https://wa.me/20101116626962" target="_blank">واتساب الدعم</a>
+                <p>تواصل المباشر مع الدعم الفني للمنصة</p>
+                <a href="https://wa.me/20101116626962" target="_blank">💬 واتساب الدعم الفني</a>
             </div>
         </div>
     </div>
     
     <script>
+        // ==========================================
+        // ⚙️ إعدادات النظام الحيوية (المطابقة للسيرفر)
+        // ==========================================
         const API = "https://abogad.vercel.app";
-        const CLIENT = "abogad";
+        const CLIENT = "abogad";             
+        const CURRENT_SITE_TYPE = "PRO";     // اختر نوع الهوية: PRO أو MAX أو POWER
+
+        // ==========================================
+        // 🎨 محرك الألوان الديناميكي حسب نوع النظام
+        // ==========================================
+        (function applyDynamicTheme() {
+            const root = document.documentElement;
+            if (CURRENT_SITE_TYPE === 'MAX') {
+                root.style.setProperty('--primary-glow', '#a855f7');
+                root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #a855f7 0%, #701a75 100%)');
+                root.style.setProperty('--shadow-glow', 'rgba(168, 85, 247, 0.25)');
+            } else if (CURRENT_SITE_TYPE === 'POWER') {
+                root.style.setProperty('--primary-glow', '#f43f5e');
+                root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #f43f5e 0%, #9f1239 100%)');
+                root.style.setProperty('--shadow-glow', 'rgba(244, 63, 94, 0.25)');
+            }
+            document.getElementById('ui-type-badge').innerText = CURRENT_SITE_TYPE;
+            document.getElementById('code').placeholder = `${CURRENT_SITE_TYPE}-XXXX-XXXX-XXXX`;
+        })();
         
         // ==========================================
-        // ✅ الحماية من جهة العميل
+        // 🛡️ الحماية من جهة العميل الصارمة
         // ==========================================
         (function() {
             document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
                 if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
@@ -331,79 +367,76 @@
                 if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
                 if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
             });
-            
             setInterval(function() {
-                if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
-                    console.clear();
-                }
+                if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) console.clear();
             }, 1000);
         })();
         
         // ==========================================
-        // ✅ عرض معلومات الاشتراك الحالي
+        // 📡 جلب وعرض معلومات الاشتراك المخصصة في الخلفية
         // ==========================================
         async function loadSubscriptionInfo() {
             const infoEl = document.getElementById('currentSubscriptionInfo');
-            
             try {
                 const response = await fetch(`${API}/api/codes/check-subscription`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ client_name: CLIENT })
+                    body: JSON.stringify({ client_name: CLIENT, site_type: CURRENT_SITE_TYPE })
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    
                     if (data.active && data.remaining_days > 0) {
-                        infoEl.innerHTML = `✅ اشتراكك الحالي فعال - متبقي <strong>${data.remaining_days}</strong> يوم`;
-                        infoEl.style.color = '#6ee7b7';
+                        infoEl.innerHTML = `✅ رصيد باقة ${CURRENT_SITE_TYPE} نشط - متبقي <strong>${data.remaining_days}</strong> يوم`;
+                        infoEl.style.color = '#34d399';
+                        infoEl.style.borderColor = 'rgba(16, 185, 129, 0.15)';
                     } else if (data.active && data.remaining_days <= 0) {
-                        infoEl.innerHTML = `⚠️ اشتراكك منتهي - يرجى التفعيل`;
-                        infoEl.style.color = '#fca5a5';
+                        infoEl.innerHTML = `⚠️ رصيد باقة ${CURRENT_SITE_TYPE} منتهي - يرجى الشحن الآن`;
+                        infoEl.style.color = '#f87171';
+                        infoEl.style.borderColor = 'rgba(239, 68, 68, 0.15)';
                     } else {
-                        infoEl.innerHTML = `🔒 لا يوجد اشتراك نشط`;
+                        infoEl.innerHTML = `🔒 ${data.message || 'لا يوجد ترخيص نشط لهذه الباقة'}`;
                         infoEl.style.color = '#94a3b8';
                     }
                 } else {
-                    infoEl.innerHTML = `⚠️ تعذر التحقق من حالة الاشتراك`;
-                    infoEl.style.color = '#94a3b8';
+                    infoEl.innerHTML = `⚠️ تعذر التحقق الصارم من حالة الاشتراك`;
                 }
             } catch (error) {
-                infoEl.innerHTML = `⚠️ تعذر الاتصال بالخادم`;
-                infoEl.style.color = '#94a3b8';
+                infoEl.innerHTML = `⚠️ تعذر ربط الاتصال بالخادم السحابي`;
             }
         }
         
         // ==========================================
-        // ✅ تنسيق كود التفعيل تلقائياً
+        // ⌨️ تنسيق كود التفعيل بذكاء (للباقات الجديدة)
         // ==========================================
         const activationInput = document.getElementById('code');
         
         activationInput.addEventListener('input', function(e) {
-            let value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-            value = value.substring(0, 16);
+            let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            let prefix = "";
             
-            let formatted = '';
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += '-';
-                formatted += value[i].toUpperCase();
-            }
+            if (raw.startsWith("POWER")) { prefix = "POWER-"; raw = raw.substring(5); }
+            else if (raw.startsWith("MAX")) { prefix = "MAX-"; raw = raw.substring(3); }
+            else if (raw.startsWith("PRO")) { prefix = "PRO-"; raw = raw.substring(3); }
             
-            this.value = formatted;
+            let value = raw;
+            if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
+            if (value.length > 9) value = value.slice(0, 9) + '-' + value.slice(9);
+            
+            e.target.value = prefix + value.substring(0, 14); 
         });
         
         // ==========================================
-        // ✅ تفعيل الاشتراك
+        // 🚀 تفعيل الترخيص مع معالجة الأخطاء الذكية
         // ==========================================
         const activateBtn = document.getElementById('activateBtn');
         const messageBox = document.getElementById('msg');
         
         activateBtn.addEventListener('click', async function() {
-            const code = activationInput.value.replace(/-/g, '');
+            const cleanCode = activationInput.value.trim().toUpperCase();
             
-            if (code.length < 16) {
-                showMessage('⚠️ برجاء إدخال كود تفعيل صحيح (16 حرف)', 'error');
+            if (cleanCode.length < 10) {
+                showMessage('⚠️ برجاء إدخال كود شحن كامل ومطابق لنسختك', 'error');
                 activationInput.focus();
                 return;
             }
@@ -416,26 +449,24 @@
                 const response = await fetch(`${API}/api/codes/activate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code, client_name: CLIENT })
+                    body: JSON.stringify({ 
+                        code: cleanCode, 
+                        client_name: CLIENT,
+                        site_type: CURRENT_SITE_TYPE
+                    })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok && data.success) {
-                    const newDays = data.remaining_days || data.days_added || '---';
-                    showMessage(`✅ تم تفعيل الكود بنجاح! الاشتراك الآن ${newDays} يوم`, 'success');
+                    showMessage(`🎉 ${data.message}`, 'success');
                     activationInput.value = '';
-                    
-                    // تحديث معلومات الاشتراك الظاهرة
-                    setTimeout(() => {
-                        loadSubscriptionInfo();
-                    }, 500);
+                    setTimeout(() => { loadSubscriptionInfo(); }, 1500);
                 } else {
-                    const errorMsg = data.message || '❌ كود التفعيل غير صحيح أو منتهي الصلاحية';
-                    showMessage(errorMsg, 'error');
+                    showMessage(data.error || '❌ كود الشحن غير صالح للعمل أو تم استخدامه مسبقاً', 'error');
                 }
             } catch (error) {
-                showMessage('❌ فشل الاتصال بخادم التفعيل. حاول مرة أخرى.', 'error');
+                showMessage('❌ فشل الاتصال بخادم التفعيل. يرجى التحقق من الشبكة.', 'error');
             } finally {
                 activateBtn.classList.remove('loading');
                 activateBtn.disabled = false;
@@ -452,11 +483,7 @@
             messageBox.style.display = 'block';
         }
         
-        // ==========================================
-        // ✅ تحميل معلومات الاشتراك عند فتح الصفحة
-        // ==========================================
         loadSubscriptionInfo();
     </script>
-    
 </body>
 </html>
