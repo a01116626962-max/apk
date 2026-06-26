@@ -8,8 +8,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --pro-color: #3b82f6;
+            --pro-glow: rgba(59, 130, 246, 0.3);
+            --max-color: #8b5cf6;
+            --max-glow: rgba(139, 92, 246, 0.3);
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(51, 65, 85, 0.6);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --radius-lg: 20px;
+            --radius: 12px;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
@@ -22,247 +40,259 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        
+
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 60% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
-        
+
         .container {
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 440px;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        
-        .subscribe-card {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 35px 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+
+        /* بطاقة رئيسية */
+        .main-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 30px 24px;
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
             text-align: center;
             animation: fadeInUp 0.5s ease;
         }
-        
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .logo-icon {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
+            margin: 0 auto 16px;
+            font-size: 1.8rem;
             box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
         }
-        
-        .subscribe-card h1 {
-            font-size: 1.5rem;
+
+        .main-card h1 {
+            font-size: 1.4rem;
             font-weight: 800;
-            color: #f1f5f9;
-            margin-bottom: 8px;
+            color: var(--text-main);
+            margin-bottom: 4px;
         }
-        
-        .subtitle {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        
-        /* حالة الاشتراك الحالية */
-        .current-status {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px 16px;
+
+        .main-card .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
             margin-bottom: 20px;
-            font-size: 0.85rem;
-            color: #94a3b8;
         }
-        
-        .current-status strong {
-            color: #6ee7b7;
-            font-size: 1rem;
+
+        /* قسمين الباقات */
+        .plans-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
-        
-        .input-group {
-            position: relative;
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius);
+            padding: 16px 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .plan-card.pro {
+            border-top: 3px solid var(--pro-color);
+        }
+
+        .plan-card.max {
+            border-top: 3px solid var(--max-color);
+        }
+
+        .plan-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .plan-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .plan-card.pro .plan-label { color: var(--pro-color); }
+        .plan-card.max .plan-label { color: var(--max-color); }
+
+        .plan-status {
+            font-size: 0.7rem;
             margin-bottom: 10px;
+            min-height: 18px;
         }
-        
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            text-align: right;
-        }
-        
-        .input-group input {
+
+        .plan-card.pro .plan-status { color: #93c5fd; }
+        .plan-card.max .plan-status { color: #c4b5fd; }
+
+        .plan-input {
             width: 100%;
-            padding: 14px 16px;
-            background: #334155;
-            border: 2px solid #475569;
-            border-radius: 12px;
-            color: #f1f5f9;
-            font-size: 1.1rem;
+            padding: 10px 8px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
             font-family: 'Cairo', sans-serif;
             text-align: center;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             transition: all 0.3s ease;
             outline: none;
+            margin-bottom: 8px;
         }
-        
-        .input-group input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-            background: #3b4252;
+
+        .plan-card.pro .plan-input:focus {
+            border-color: var(--pro-color);
+            box-shadow: 0 0 0 3px var(--pro-glow);
         }
-        
-        .input-group input::placeholder {
+
+        .plan-card.max .plan-input:focus {
+            border-color: var(--max-color);
+            box-shadow: 0 0 0 3px var(--max-glow);
+        }
+
+        .plan-input::placeholder {
             color: #64748b;
             letter-spacing: 1px;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
         }
-        
-        .activate-btn {
+
+        .plan-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            color: white;
+            padding: 10px;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            margin-top: 15px;
+            color: white;
         }
-        
-        .activate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+
+        .plan-card.pro .plan-btn {
+            background: linear-gradient(135deg, var(--pro-color), #1d4ed8);
         }
-        
-        .activate-btn:active {
+
+        .plan-card.max .plan-btn {
+            background: linear-gradient(135deg, var(--max-color), #7c3aed);
+        }
+
+        .plan-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .plan-btn:active {
             transform: translateY(0);
         }
-        
-        .activate-btn:disabled {
-            opacity: 0.6;
+
+        .plan-btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-        
-        .loader {
+
+        /* رسائل */
+        .message-box {
             display: none;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .activate-btn.loading .btn-text {
-            display: none;
-        }
-        
-        .activate-btn.loading .loader {
-            display: block;
-        }
-        
-        .message {
-            display: none;
-            padding: 14px;
-            border-radius: 12px;
-            margin-top: 15px;
+            padding: 12px;
+            border-radius: var(--radius);
+            margin-top: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            text-align: center;
             animation: fadeIn 0.3s ease;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
-        .message.success {
+
+        .message-box.success {
             display: block;
             background: rgba(16, 185, 129, 0.12);
-            border: 1.5px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             color: #6ee7b7;
         }
-        
-        .message.error {
+
+        .message-box.error {
             display: block;
             background: rgba(239, 68, 68, 0.12);
-            border: 1.5px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             color: #fca5a5;
         }
-        
+
+        /* روابط */
+        .links {
+            text-align: center;
+            margin-top: 8px;
+        }
+
         .back-link {
-            display: block;
-            margin-top: 20px;
-            color: #94a3b8;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
-        
+
         .back-link:hover {
-            color: #f1f5f9;
+            color: var(--text-main);
         }
-        
+
         .contact-info {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
-            font-size: 0.8rem;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.75rem;
             color: #64748b;
+            text-align: center;
         }
-        
+
         .contact-info a {
-            color: #2563eb;
+            color: #3b82f6;
             text-decoration: none;
         }
-        
+
+        /* تجاوب */
         @media (max-width: 480px) {
-            .subscribe-card {
-                padding: 25px 18px;
+            .plans-container {
+                grid-template-columns: 1fr;
             }
             
-            .subscribe-card h1 {
-                font-size: 1.3rem;
-            }
-            
-            .input-group input {
-                font-size: 1rem;
-                padding: 12px 14px;
+            .main-card {
+                padding: 20px 14px;
             }
         }
     </style>
@@ -270,53 +300,66 @@
 <body>
     
     <div class="container">
-        <div class="subscribe-card">
-            <!-- شعار -->
+        <!-- البطاقة الرئيسية -->
+        <div class="main-card">
             <div class="logo-icon">🔐</div>
-            
             <h1>تفعيل الاشتراك</h1>
-            <p class="subtitle">أدخل كود التفعيل الخاص بك لإضافة أيام جديدة لاشتراكك</p>
+            <p class="subtitle">أدخل كود التفعيل لتجديد أو تمديد اشتراكك</p>
             
-            <!-- ✅ حالة الاشتراك الحالية -->
-            <div class="current-status" id="currentSubscriptionInfo">
-                جاري تحميل معلومات الاشتراك...
+            <!-- قسمين الباقات -->
+            <div class="plans-container">
+                
+                <!-- ✅ PRO -->
+                <div class="plan-card pro">
+                    <div class="plan-label">🛒 الموقع الأساسي (PRO)</div>
+                    <div class="plan-status" id="status-pro">جاري التحميل...</div>
+                    <input 
+                        type="text" 
+                        id="input-pro" 
+                        class="plan-input" 
+                        placeholder="XXXX-XXXX-XXXX-XXXX" 
+                        maxlength="19" 
+                        autocomplete="off"
+                    >
+                    <button id="btn-pro" class="plan-btn">تفعيل PRO</button>
+                </div>
+                
+                <!-- ✅ MAX -->
+                <div class="plan-card max">
+                    <div class="plan-label">⚡ الموقع المخفف (MAX)</div>
+                    <div class="plan-status" id="status-max">جاري التحميل...</div>
+                    <input 
+                        type="text" 
+                        id="input-max" 
+                        class="plan-input" 
+                        placeholder="XXXX-XXXX-XXXX-XXXX" 
+                        maxlength="19" 
+                        autocomplete="off"
+                    >
+                    <button id="btn-max" class="plan-btn">تفعيل MAX</button>
+                </div>
+                
             </div>
             
-            <!-- حقل كود التفعيل -->
-            <div class="input-group">
-                <label for="code">كود التفعيل</label>
-                <input 
-                    type="text" 
-                    id="code" 
-                    placeholder="XXXX-XXXX-XXXX-XXXX" 
-                    maxlength="19" 
-                    autocomplete="off"
-                >
-            </div>
-            
-            <!-- زر التفعيل -->
-            <button id="activateBtn" class="activate-btn">
-                <span class="btn-text">🚀 تفعيل الاشتراك</span>
-                <div class="loader"></div>
-            </button>
-            
-            <!-- رسالة النتيجة -->
-            <div id="msg" class="message"></div>
-            
-            <!-- رابط العودة -->
+            <!-- رسالة النتيجة العامة -->
+            <div id="msg" class="message-box"></div>
+        </div>
+        
+        <!-- روابط -->
+        <div class="links">
             <a href="index.html" class="back-link">← العودة للنظام</a>
-            
-            <!-- معلومات الاتصال -->
-            <div class="contact-info">
-                <p>تحتاج مساعدة؟ تواصل مع الدعم الفني</p>
-                <a href="https://wa.me/20101116626962" target="_blank">واتساب الدعم</a>
-            </div>
+        </div>
+        
+        <div class="contact-info">
+            <p>تحتاج مساعدة؟ تواصل مع الدعم الفني</p>
+            <a href="https://wa.me/20101116626962" target="_blank">واتساب الدعم</a>
         </div>
     </div>
     
     <script>
-        const API = "https://abogad.vercel.app";
-        const CLIENT = "abogad";
+        // ⚙️ الإعدادات الثابتة
+        const API_URL = "https://abogad.vercel.app";
+        const CLIENT_NAME = "abogad";
         
         // ==========================================
         // ✅ الحماية من جهة العميل
@@ -340,152 +383,137 @@
         })();
         
         // ==========================================
-        // ✅ عرض معلومات الاشتراك الحالي (يدعم PRO و MAX)
+        // 1. جلب وعرض الحالة
         // ==========================================
-        async function loadSubscriptionInfo() {
-            const infoEl = document.getElementById('currentSubscriptionInfo');
-            
+        async function fetchStatus() {
             try {
-                // فحص اشتراك PRO
-                const proResponse = await fetch(`${API}/api/codes/check-subscription`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ client_name: CLIENT, site_type: 'PRO' })
-                });
+                const [proRes, maxRes] = await Promise.all([
+                    fetch(`${API_URL}/api/codes/check-subscription`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ client_name: CLIENT_NAME, site_type: 'PRO' })
+                    }).catch(() => null),
+                    fetch(`${API_URL}/api/codes/check-subscription`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ client_name: CLIENT_NAME, site_type: 'MAX' })
+                    }).catch(() => null)
+                ]);
 
-                // فحص اشتراك MAX
-                const maxResponse = await fetch(`${API}/api/codes/check-subscription`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ client_name: CLIENT, site_type: 'MAX' })
-                });
-
-                let proDays = 0, maxDays = 0, proActive = false, maxActive = false;
-
-                if (proResponse.ok) {
-                    const data = await proResponse.json();
-                    proActive = data.active;
-                    proDays = data.remaining_days || 0;
+                if (proRes && proRes.ok) {
+                    const data = await proRes.json();
+                    const el = document.getElementById('status-pro');
+                    if (el) {
+                        el.innerHTML = (data.active && data.remaining_days > 0) 
+                            ? `✅ مفعل: ${data.remaining_days} يوم` 
+                            : `❌ غير مفعل`;
+                    }
+                } else {
+                    const el = document.getElementById('status-pro');
+                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
                 }
-
-                if (maxResponse.ok) {
-                    const data = await maxResponse.json();
-                    maxActive = data.active;
-                    maxDays = data.remaining_days || 0;
-                }
-
-                let html = '';
                 
-                // اشتراك PRO
-                if (proActive && proDays > 0) {
-                    html += `✅ <strong>PRO</strong>: متبقي ${proDays} يوم<br>`;
+                if (maxRes && maxRes.ok) {
+                    const data = await maxRes.json();
+                    const el = document.getElementById('status-max');
+                    if (el) {
+                        el.innerHTML = (data.active && data.remaining_days > 0) 
+                            ? `✅ مفعل: ${data.remaining_days} يوم` 
+                            : `❌ غير مفعل`;
+                    }
                 } else {
-                    html += `❌ <strong>PRO</strong>: غير مفعل<br>`;
+                    const el = document.getElementById('status-max');
+                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
                 }
-
-                // اشتراك MAX
-                if (maxActive && maxDays > 0) {
-                    html += `✅ <strong>MAX</strong>: متبقي ${maxDays} يوم`;
-                } else {
-                    html += `❌ <strong>MAX</strong>: غير مفعل`;
-                }
-
-                infoEl.innerHTML = html;
-
-                if ((proActive && proDays > 0) || (maxActive && maxDays > 0)) {
-                    infoEl.style.color = '#6ee7b7';
-                } else {
-                    infoEl.style.color = '#fca5a5';
-                }
-
-            } catch (error) {
-                infoEl.innerHTML = `⚠️ تعذر الاتصال بالخادم`;
-                infoEl.style.color = '#94a3b8';
+            } catch (e) {
+                console.error("Fetch Error");
             }
         }
-        
+
         // ==========================================
-        // ✅ تنسيق كود التفعيل تلقائياً
+        // 2. التنسيق التلقائي للحقول
         // ==========================================
-        const activationInput = document.getElementById('code');
-        
-        activationInput.addEventListener('input', function(e) {
-            let value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-            value = value.substring(0, 16);
+        function setupFormatter(inputId) {
+            const el = document.getElementById(inputId);
+            if (!el) return;
+            el.addEventListener('input', (e) => {
+                let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                if (raw.length > 16) raw = raw.substring(0, 16);
+                e.target.value = raw.match(/.{1,4}/g)?.join('-') || raw;
+            });
+        }
+        setupFormatter('input-pro');
+        setupFormatter('input-max');
+
+        // ==========================================
+        // 3. دوال التفعيل
+        // ==========================================
+        function showMessage(text, type) {
+            const msgBox = document.getElementById('msg');
+            msgBox.textContent = text;
+            msgBox.className = 'message-box ' + type;
+            msgBox.style.display = 'block';
             
-            let formatted = '';
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += '-';
-                formatted += value[i].toUpperCase();
-            }
-            
-            this.value = formatted;
-        });
-        
-        // ==========================================
-        // ✅ تفعيل الاشتراك (يدعم site_type)
-        // ==========================================
-        const activateBtn = document.getElementById('activateBtn');
-        const messageBox = document.getElementById('msg');
-        
-        activateBtn.addEventListener('click', async function() {
-            const code = activationInput.value.replace(/-/g, '');
-            
-            if (code.length < 16) {
-                showMessage('⚠️ برجاء إدخال كود تفعيل صحيح (16 حرف)', 'error');
-                activationInput.focus();
+            // إخفاء تلقائي بعد 5 ثواني
+            setTimeout(() => {
+                msgBox.style.display = 'none';
+            }, 5000);
+        }
+
+        async function activateCode(inputId, type, btnId) {
+            const inputEl = document.getElementById(inputId);
+            const btnEl = document.getElementById(btnId);
+            const cleanCode = inputEl.value.replace(/-/g, '').trim();
+
+            if (cleanCode.length !== 16) {
+                showMessage(`⚠️ كود ${type} غير مكتمل - يجب أن يكون 16 حرف`, 'error');
+                inputEl.focus();
                 return;
             }
-            
-            activateBtn.classList.add('loading');
-            activateBtn.disabled = true;
-            messageBox.style.display = 'none';
-            
+
+            btnEl.disabled = true;
+            btnEl.innerText = "⏳ جاري التفعيل...";
+
             try {
-                const response = await fetch(`${API}/api/codes/activate`, {
+                const response = await fetch(`${API_URL}/api/codes/activate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code, client_name: CLIENT })
+                    body: JSON.stringify({ code: cleanCode, client_name: CLIENT_NAME, site_type: type })
                 });
-                
                 const data = await response.json();
-                
+
                 if (response.ok && data.success) {
                     const newDays = data.remaining_days || data.days_added || '---';
-                    const siteType = data.site_type || '';
-                    showMessage(`✅ تم تفعيل الكود بنجاح! ${siteType ? '(' + siteType + ') ' : ''}الاشتراك الآن ${newDays} يوم`, 'success');
-                    activationInput.value = '';
-                    
-                    // تحديث معلومات الاشتراك الظاهرة
-                    setTimeout(() => {
-                        loadSubscriptionInfo();
-                    }, 500);
+                    showMessage(`🎉 تم تفعيل باقة ${type} بنجاح! الاشتراك الآن ${newDays} يوم`, 'success');
+                    inputEl.value = '';
+                    fetchStatus(); // إنعاش لحظي
                 } else {
-                    const errorMsg = data.message || '❌ كود التفعيل غير صحيح أو منتهي الصلاحية';
-                    showMessage(errorMsg, 'error');
+                    showMessage(data.message || data.error || `❌ كود ${type} غير صحيح`, 'error');
                 }
-            } catch (error) {
-                showMessage('❌ فشل الاتصال بخادم التفعيل. حاول مرة أخرى.', 'error');
+            } catch (e) {
+                showMessage('❌ خطأ في الاتصال بالخادم. حاول مرة أخرى.', 'error');
             } finally {
-                activateBtn.classList.remove('loading');
-                activateBtn.disabled = false;
+                btnEl.disabled = false;
+                btnEl.innerText = `تفعيل ${type}`;
             }
-        });
-        
-        activationInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') activateBtn.click();
-        });
-        
-        function showMessage(text, type) {
-            messageBox.textContent = text;
-            messageBox.className = 'message ' + type;
-            messageBox.style.display = 'block';
         }
-        
+
+        // ربط الأزرار
+        document.getElementById('btn-pro')?.addEventListener('click', () => activateCode('input-pro', 'PRO', 'btn-pro'));
+        document.getElementById('btn-max')?.addEventListener('click', () => activateCode('input-max', 'MAX', 'btn-max'));
+
+        // السماح بالتفعيل عند الضغط على Enter
+        document.getElementById('input-pro')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') activateCode('input-pro', 'PRO', 'btn-pro');
+        });
+        document.getElementById('input-max')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') activateCode('input-max', 'MAX', 'btn-max');
+        });
+
         // ==========================================
-        // ✅ تحميل معلومات الاشتراك عند فتح الصفحة
+        // 4. تحميل الحالة عند فتح الصفحة
         // ==========================================
-        loadSubscriptionInfo();
+        document.addEventListener('DOMContentLoaded', fetchStatus);
     </script>
     
 </body>
