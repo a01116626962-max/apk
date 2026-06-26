@@ -19,7 +19,7 @@
             <div style="display: flex; align-items: center; gap: 8px;">
                 <h2>القائمة</h2>
                 <span id="subscriptionBadge" class="subscription-badge-mini active-subscription" style="display: none;">
-                    --
+                    <span id="remainingDaysText">--</span>
                 </span>
             </div>
             <button id="closeSidebarBtn" class="close-btn">✕</button>
@@ -36,6 +36,9 @@
                 <div class="nav-group-content">
                     <button id="navPosBtn" class="nav-item active-nav">
                         <span class="nav-icon">🛒</span><span class="nav-label">شاشة البيع</span>
+                    </button>
+                    <button id="navLiteCashierBtn" class="nav-item max-nav-item">
+                        <span class="nav-icon">⚡</span><span class="nav-label">كاشير مخفف</span>
                     </button>
                     <button id="navCashDropBtn" class="nav-item">
                         <span class="nav-icon">💵</span><span class="nav-label">تسليم نقدية للمدير</span>
@@ -102,15 +105,6 @@
                 </div>
             </div>
             
-            <!-- ⚡ كاشير مخفف -->
-            <div class="nav-group open">
-                <div class="nav-group-content" style="max-height:500px;padding:0 4px;">
-                    <a id="navLiteCashierBtn" class="nav-item max-nav-item" href="lite-cashier.html">
-                        <span class="nav-icon">⚡</span><span class="nav-label">كاشير مخفف</span>
-                    </a>
-                </div>
-            </div>
-            
         </nav>
         
         <div class="sidebar-footer">
@@ -136,19 +130,19 @@
                     <input type="text" id="barcodeInput" placeholder="مرر الباركود أو اكتب اسم المنتج..." autofocus>
                 </div>
                 <button id="startCameraBtn" class="icon-btn">📷</button>
-                <label class="toggle-switch-label">
+                <label class="toggle-switch-label" id="mainScanToggle">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
                     <span class="toggle-switch"></span>
                 </label>
             </div>
             <div id="reader" class="camera-container"></div>
             <div id="quickItemsGrid" class="quick-items-grid" style="display:none;"></div>
-            <button id="showQuickItemsPopupBtn" class="show-popup-btn">📋 عرض قائمة المنتجات السريعة</button>
+            <button id="showQuickItemsPopupBtn" class="show-popup-btn">📋 عرض قائمة المنتجات السريعة (15 منتج)</button>
             
             <div class="cart-area">
                 <table id="cartTable">
                     <thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th>حذف</th></tr></thead>
-                    <tbody id="cartBody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">السلة فارغة</td></tr></tbody>
+                    <tbody id="cartBody"><tr><td colspan="5" class="empty-cart-msg">السلة فارغة</td></tr></tbody>
                 </table>
             </div>
             
