@@ -40,10 +40,10 @@
                         <span class="nav-icon">🛒</span>
                         <span class="nav-label">شاشة البيع</span>
                     </button>
-                    <!-- ✅ رابط الصفحة المخففة -->
+                    <!-- ✅ رابط الصفحة المخففة (Lite) -->
                     <button id="navLitePosBtn" class="nav-item" onclick="window.location.href='lite.html'">
                         <span class="nav-icon">⚡</span>
-                        <span class="nav-label">البيع السريع (Lite)</span>
+                        <span class="nav-label">البيع السريع</span>
                     </button>
                     <button id="navCashDropBtn" class="nav-item">
                         <span class="nav-icon">💵</span>
@@ -161,9 +161,9 @@
                 <div class="search-input-wrapper">
                     <input type="text" id="barcodeInput" placeholder="مرر الباركود أو اكتب اسم المنتج..." autofocus>
                 </div>
-                <button id="startCameraBtn" class="icon-btn" title="تشغيل الكاميرا">📷</button>
-                <!-- ✅ زر وضع المسح (مفرد/متعدد) - بدون نصوص -->
-                <label class="toggle-switch-label" title="وضع المسح">
+                <button id="startCameraBtn" class="icon-btn">📷</button>
+                <!-- ✅ Toggle Switch بدون نصوص -->
+                <label class="toggle-switch-label">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
                     <span class="toggle-switch"></span>
                 </label>
@@ -174,8 +174,8 @@
             <!-- ✅ القائمة السريعة مخفية افتراضياً -->
             <div id="quickItemsGrid" class="quick-items-grid" style="display: none;"></div>
             
-            <!-- ✅ زر إظهار/إخفاء القائمة السريعة (بدون نصوص) -->
-            <button id="toggleQuickItemsBtn" class="icon-btn" title="قائمة سريعة" style="margin-top: 8px;">📋</button>
+            <!-- ✅ زر Toggle للقائمة السريعة بدون نصوص -->
+            <button id="toggleQuickItemsBtn" class="icon-btn" style="margin-top: 8px;">📋</button>
             
             <div class="cart-area">
                 <table id="cartTable">
@@ -294,7 +294,7 @@
                 <div class="flex-row form-full-width">
                     <input type="text" id="prodBarcode" placeholder="الباركود" class="flex-2">
                     <button type="button" id="startProdCameraBtn" class="icon-btn">📷</button>
-                    <!-- ✅ لا يوجد Toggle Switch هنا - مطلوب مسح منتج واحد فقط -->
+                    <!-- ✅ لا يوجد Toggle Switch هنا -->
                 </div>
                 <div id="prodReader" class="camera-container form-full-width"></div>
                 <input type="text" id="prodName" placeholder="اسم المنتج">
@@ -371,6 +371,7 @@
                 <div class="flex-row form-full-width">
                     <input type="text" id="restockBarcode" placeholder="الباركود" class="flex-2">
                     <button type="button" id="startRestockCameraBtn" class="icon-btn">📷</button>
+                    <!-- ✅ لا يوجد Toggle Switch هنا -->
                 </div>
                 <div id="restockReader" class="camera-container form-full-width"></div>
                 <input type="text" id="restockProdName" placeholder="اسم المنتج" readonly>
@@ -399,4 +400,4 @@
     <script type="module" src="app.js"></script>
 
 </body>
-</html>
+    </html>
