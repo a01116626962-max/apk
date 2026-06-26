@@ -485,6 +485,28 @@ main {
 .icon-btn:hover { background: var(--border-color); color: var(--text-main); }
 .icon-btn:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.95); }
 
+/* ✅ الزر العائم للكاميرا (Floating Camera Button) */
+#floatingCameraBtn {
+    position: fixed;
+    z-index: 1500;
+    background: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#floatingCameraBtn:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+
 /* ✅ مفتاح التبديل (Toggle Switch) */
 .toggle-switch-label {
     position: relative;
@@ -1100,4 +1122,4 @@ form select:focus {
     .total-amount { font-size: 1.2rem; }
     #checkoutBtn { font-size: 1rem; padding: 12px; }
     .analytics-dashboard { grid-template-columns: 1fr; }
-   }
+}
