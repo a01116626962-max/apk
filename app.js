@@ -210,6 +210,38 @@ updateSubscriptionUI(proDays);
         console.error("Subscription validation integration error.");
     }
 }
+function updateSubscriptionUI(proDays) {
+    const badge = document.getElementById('subscriptionBadge');
+    const daysText = document.getElementById('remainingDaysText');
+    
+    if (!badge || !daysText) return;
+    
+    badge.style.display = 'inline-flex';
+    badge.style.cursor = 'pointer';
+    badge.onclick = function() {
+        window.location.href = 'subscribe.html';
+    };
+    
+    if (proDays > 3) {
+        badge.className = 'subscription-badge-mini active-subscription';
+        daysText.textContent = `${proDays} يوم`;
+    } else if (proDays >= 1 && proDays <= 3) {
+        badge.className = 'subscription-badge-mini warning-subscription';
+        daysText.textContent = `⚠️ ${proDays}`;
+        
+        document.getElementById('warningDaysLeft').textContent = proDays;
+        document.getElementById('subscriptionWarningModal').style.display = 'flex';
+    } else if (proDays <= 0) {
+        badge.className = 'subscription-badge-mini expired-subscription';
+        daysText.textContent = '❌ منتهي';
+        
+        setTimeout(() => {
+            window.location.href = 'subscribe.html';
+        }, 3000);
+        
+        alert("❌ انتهت صلاحية اشتراكك. سيتم توجيهك لصفحة التجديد.");
+    }
+}
 
 // ==========================================
 // ✅ 7. الزر العائم للكاميرا (Floating Camera Button)
