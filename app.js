@@ -188,6 +188,8 @@ async function enforceCloudSubscriptionLogic() {
             window.location.href = "subscribe.html";
             return;
         }
+      
+updateSubscriptionUI(proDays);
 
         if (maxResponse && maxResponse.ok) {
             const maxData = await maxResponse.json();
