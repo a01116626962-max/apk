@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>كاشير سريع</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            direction: rtl;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* شريط علوي بسيط */
+        .top-bar {
+            background: #0f172a;
+            color: white;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            gap: 8px;
+        }
+
+        .top-bar span {
+            background: rgba(255,255,255,0.08);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 8px;
+            gap: 8px;
+        }
+
+        /* شريط البحث */
+        .search-bar {
+            display: flex;
+            gap: 6px;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            outline: none;
+            min-width: 0;
+        }
+
+        .search-bar input:focus {
+            border-color: #2563eb;
+            background: white;
+        }
+
+        .cam-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .cam-btn:active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* الكاميرا */
+        #reader {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* جدول السلة */
+        .cart-section {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cart-list {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 8px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: 600;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-price {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-shrink: 0;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1.5px solid #e2e8f0;
+            background: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .qty-btn:active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .qty-num {
+            width: 32px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .item-total {
+            font-weight: 700;
+            color: #2563eb;
+            min-width: 45px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .del-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: #fef2f2;
+            color: #ef4444;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .del-btn:active {
+            background: #ef4444;
+            color: white;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* الفوتر */
+        .checkout-bar {
+            background: white;
+            padding: 12px;
+            border-top: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .total-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .total-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        #checkoutBtn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        #checkoutBtn:active {
+            transform: scale(0.96);
+            background: #059669;
+        }
+
+        #checkoutBtn:disabled {
+            opacity: 0.5;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط علوي -->
+    <div class="top-bar">
+        <strong>⚡ كاشير سريع</strong>
+        <span id="shiftLabel">لا توجد وردية</span>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="main-content">
+        
+        <!-- بحث -->
+        <div class="search-bar">
+            <input type="text" id="barcodeInput" placeholder="باركود أو اسم المنتج..." autofocus>
+            <button class="cam-btn" id="cameraBtn">📷</button>
+        </div>
+        
+        <!-- كاميرا -->
+        <div id="reader"></div>
+        
+        <!-- سلة -->
+        <div class="cart-section">
+            <div class="cart-list" id="cartList">
+                <div class="empty-cart">السلة فارغة</div>
+            </div>
+            
+            <!-- دفع -->
+            <div class="checkout-bar">
+                <div>
+                    <div class="total-text">الإجمالي</div>
+                    <div class="total-price"><span id="totalDisplay">0</span> ج.م</div>
+                </div>
+                <button id="checkoutBtn">💳 دفع</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- QR Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <!-- Firebase + المنطق -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, where, limit, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyDL5RFFP6WwxA5yGvhl0EF5mG0UKZi5GcA",
+            authDomain: "a01116626962-82e29.firebaseapp.com",
+            projectId: "a01116626962-82e29",
+            storageBucket: "a01116626962-82e29.firebasestorage.app",
+            messagingSenderId: "245357920580",
+            appId: "1:245357920580:web:ef3fdd3d441db66ce31711"
+        });
+        const db = getFirestore(app);
+
+        // ========== متغيرات ==========
+        let cart = [];
+        let products = [];
+        let shift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0 };
+
+        // ========== تحميل ==========
+        async function init() {
+            const snap = await getDocs(collection(db, "products"));
+            products = [];
+            snap.forEach(d => { let p = d.data(); p.id = d.id; if (p.quantity !== -99999) products.push(p); });
+
+            const saved = localStorage.getItem('activeShift');
+            if (saved) {
+                try {
+                    shift = JSON.parse(saved);
+                    document.getElementById('shiftLabel').innerText = 
+                        shift.active ? `${shift.cashierName} | ${shift.startCash} ج` : 'لا توجد وردية';
+                } catch(e) {}
+            }
+        }
+
+        // ========== سلة ==========
+        function addToCart(p) {
+            if (!p || p.quantity <= 0) { alert("غير متوفر"); return; }
+            let ex = cart.find(i => i.id === p.id);
+            if (ex) {
+                if (ex.cartQty < p.quantity) ex.cartQty++;
+                else { alert("الكمية لا تكفي"); return; }
+            } else {
+                cart.push({ ...p, cartQty: 1 });
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const el = document.getElementById('cartList');
+            let total = 0;
+            
+            if (!cart.length) {
+                el.innerHTML = '<div class="empty-cart">السلة فارغة</div>';
+            } else {
+                el.innerHTML = cart.map((item, i) => {
+                    const st = item.sellPrice * item.cartQty;
+                    total += st;
+                    return `<div class="cart-item">
+                        <div style="flex:1;min-width:0;">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${item.sellPrice} ج × ${item.cartQty}</div>
+                        </div>
+                        <div class="qty-control">
+                            <button class="qty-btn" data-i="${i}" data-d="-1">−</button>
+                            <span class="qty-num">${item.cartQty}</span>
+                            <button class="qty-btn" data-i="${i}" data-d="1">+</button>
+                        </div>
+                        <span class="item-total">${st} ج</span>
+                        <button class="del-btn" data-i="${i}">✕</button>
+                    </div>`;
+                }).join('');
+                
+                // ربط الأحداث
+                el.querySelectorAll('.qty-btn').forEach(b => {
+                    b.addEventListener('click', () => {
+                        const i = parseInt(b.dataset.i);
+                        const d = parseInt(b.dataset.d);
+                        const n = cart[i].cartQty + d;
+                        if (n > 0 && n <= cart[i].quantity) { cart[i].cartQty = n; renderCart(); }
+                        else if (n <= 0) { cart.splice(i, 1); renderCart(); }
+                        else alert("الكمية لا تكفي");
+                    });
+                });
+                el.querySelectorAll('.del-btn').forEach(b => {
+                    b.addEventListener('click', () => {
+                        cart.splice(parseInt(b.dataset.i), 1);
+                        renderCart();
+                    });
+                });
+            }
+            
+            document.getElementById('totalDisplay').innerText = total;
+        }
+
+        // ========== دفع ==========
+        document.getElementById('checkoutBtn').addEventListener('click', async () => {
+            if (!shift.active) return alert("لا توجد وردية! افتح النظام الرئيسي أولاً.");
+            if (!cart.length) return alert("السلة فارغة");
+
+            const btn = document.getElementById('checkoutBtn');
+            btn.disabled = true;
+            btn.innerText = '...';
+
+            let ts = 0, tc = 0;
+            const items = cart.map(i => {
+                ts += i.sellPrice * i.cartQty;
+                tc += i.buyPrice * i.cartQty;
+                return { productId: i.id, name: i.name, qty: i.cartQty, price: i.sellPrice };
+            });
+
+            try {
+                const batch = writeBatch(db);
+                const ref = doc(collection(db, "invoices"));
+                batch.set(ref, { timestamp: new Date().toISOString(), cashier: shift.cashierName, items, totalSales: ts, totalCost: tc });
+                cart.forEach(i => batch.update(doc(db, "products", i.id), { quantity: increment(-i.cartQty) }));
+                await batch.commit();
+
+                shift.sales += ts;
+                localStorage.setItem('activeShift', JSON.stringify(shift));
+                
+                cart = [];
+                renderCart();
+                document.getElementById('barcodeInput').focus();
+                alert(`✅ تم البيع - ${ts} ج`);
+            } catch(e) {
+                alert("❌ خطأ");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '💳 دفع';
+            }
+        });
+
+        // ========== بحث ==========
+        document.getElementById('barcodeInput').addEventListener('keypress', async (e) => {
+            if (e.key !== 'Enter') return;
+            const val = e.target.value.trim();
+            if (!val) return;
+            
+            const norm = (t) => t.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g,'').trim().toLowerCase();
+            const ns = norm(val);
+            
+            const local = products.find(p => (p.barcode === val || (p.searchKey && p.searchKey.includes(ns))) && p.quantity > 0);
+            if (local) { addToCart({...local}); e.target.value = ''; return; }
+            
+            const s1 = await getDocs(query(collection(db, "products"), where("barcode", "==", val), limit(1)));
+            if (!s1.empty) {
+                const p = s1.docs[0].data(); p.id = s1.docs[0].id;
+                if (p.quantity > 0) { addToCart(p); e.target.value = ''; return; }
+            }
+            
+            const s2 = await getDocs(query(collection(db, "products"), where("searchKey", "array-contains", ns), limit(1)));
+            if (!s2.empty) {
+                const p = s2.docs[0].data(); p.id = s2.docs[0].id;
+                if (p.quantity > 0) { addToCart(p); e.target.value = ''; return; }
+            }
+            
+            alert("المنتج غير موجود");
+        });
+
+        // ========== كاميرا ==========
+        let qrCode, camOpen = false;
+        document.getElementById('cameraBtn').addEventListener('click', () => {
+            if (!window.Html5Qrcode) return alert("انتظر...");
+            if (camOpen) {
+                qrCode.stop().then(() => {
+                    document.getElementById('reader').style.display = 'none';
+                    camOpen = false;
+                });
+            } else {
+                document.getElementById('reader').style.display = 'block';
+                qrCode = new window.Html5Qrcode("reader");
+                qrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 100 } },
+                    (text) => {
+                        document.getElementById('barcodeInput').value = text;
+                        document.getElementById('barcodeInput').dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter' }));
+                        qrCode.stop().then(() => {
+                            document.getElementById('reader').style.display = 'none';
+                            camOpen = false;
+                        });
+                    },
+                    () => {}
+                ).then(() => { camOpen = true; }).catch(() => {
+                    alert("اسمح بالكاميرا");
+                    document.getElementById('reader').style.display = 'none';
+                });
+            }
+        });
+
+        // ========== حماية ==========
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'U')) e.preventDefault();
+        });
+
+        // ========== ابدأ ==========
+        init();
+        document.getElementById('barcodeInput').focus();
+    </script>
+</body>
+</html>
