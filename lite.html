@@ -24,7 +24,6 @@
             flex-direction: column;
         }
 
-        /* شريط علوي بسيط */
         .top-bar {
             background: #0f172a;
             color: white;
@@ -44,7 +43,6 @@
             color: #cbd5e1;
         }
 
-        /* المحتوى الرئيسي */
         .main-content {
             flex: 1;
             display: flex;
@@ -56,7 +54,6 @@
             gap: 8px;
         }
 
-        /* شريط البحث */
         .search-bar {
             display: flex;
             gap: 6px;
@@ -104,7 +101,6 @@
             border-color: #2563eb;
         }
 
-        /* Dropdown البحث */
         .lite-dropdown {
             position: absolute;
             top: 100%;
@@ -163,7 +159,6 @@
             white-space: nowrap;
         }
 
-        /* الكاميرا */
         #reader {
             display: none;
             width: 100%;
@@ -172,7 +167,6 @@
             border: 2px solid #e2e8f0;
         }
 
-        /* القائمة السريعة */
         .quick-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -223,7 +217,6 @@
             transform: scale(0.98);
         }
 
-        /* جدول السلة */
         .cart-section {
             flex: 1;
             background: white;
@@ -251,9 +244,7 @@
             font-size: 0.85rem;
         }
 
-        .cart-item:last-child {
-            border-bottom: none;
-        }
+        .cart-item:last-child { border-bottom: none; }
 
         .item-name {
             font-weight: 600;
@@ -264,58 +255,29 @@
             text-overflow: ellipsis;
         }
 
-        .item-price {
-            color: #64748b;
-            font-size: 0.75rem;
-        }
+        .item-price { color: #64748b; font-size: 0.75rem; }
 
-        .qty-control {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            flex-shrink: 0;
-        }
+        .qty-control { display: flex; align-items: center; gap: 0; flex-shrink: 0; }
 
         .qty-btn {
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 6px;
             border: 1.5px solid #e2e8f0;
             background: white;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1rem; font-weight: 700;
             cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center; justify-content: center;
             color: #334155;
             font-family: 'Cairo', sans-serif;
         }
 
-        .qty-btn:active {
-            background: #2563eb;
-            color: white;
-            border-color: #2563eb;
-        }
-
-        .qty-num {
-            width: 32px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .item-total {
-            font-weight: 700;
-            color: #2563eb;
-            min-width: 45px;
-            text-align: left;
-            font-size: 0.85rem;
-        }
+        .qty-btn:active { background: #2563eb; color: white; border-color: #2563eb; }
+        .qty-num { width: 32px; text-align: center; font-weight: 700; font-size: 0.95rem; }
+        .item-total { font-weight: 700; color: #2563eb; min-width: 45px; text-align: left; font-size: 0.85rem; }
 
         .del-btn {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             border-radius: 50%;
             border: none;
             background: #fef2f2;
@@ -323,24 +285,13 @@
             font-size: 0.8rem;
             cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center; justify-content: center;
             flex-shrink: 0;
         }
 
-        .del-btn:active {
-            background: #ef4444;
-            color: white;
-        }
+        .del-btn:active { background: #ef4444; color: white; }
+        .empty-cart { text-align: center; color: #94a3b8; padding: 30px; font-size: 0.9rem; }
 
-        .empty-cart {
-            text-align: center;
-            color: #94a3b8;
-            padding: 30px;
-            font-size: 0.9rem;
-        }
-
-        /* الفوتر */
         .checkout-bar {
             background: white;
             padding: 12px;
@@ -351,16 +302,8 @@
             gap: 10px;
         }
 
-        .total-text {
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .total-price {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #2563eb;
-        }
+        .total-text { font-weight: 700; font-size: 0.9rem; }
+        .total-price { font-size: 1.4rem; font-weight: 800; color: #2563eb; }
 
         #checkoutBtn {
             background: #10b981;
@@ -376,48 +319,54 @@
             transition: all 0.2s;
         }
 
-        #checkoutBtn:active {
-            transform: scale(0.96);
-            background: #059669;
-        }
+        #checkoutBtn:active { transform: scale(0.96); background: #059669; }
+        #checkoutBtn:disabled { opacity: 0.5; transform: none; }
 
-        #checkoutBtn:disabled {
-            opacity: 0.5;
-            transform: none;
+        /* الزر العائم */
+        #floatingCameraBtn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 900;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- شريط علوي -->
     <div class="top-bar">
         <strong>⚡ كاشير MAX</strong>
         <span id="shiftLabel">لا توجد وردية</span>
     </div>
 
-    <!-- المحتوى -->
     <div class="main-content">
         
-        <!-- بحث -->
         <div class="search-bar">
             <input type="text" id="barcodeInput" placeholder="باركود أو اسم المنتج..." autofocus>
             <button class="cam-btn" id="cameraBtn">📷</button>
         </div>
         
-        <!-- كاميرا -->
         <div id="reader"></div>
         
-        <!-- القائمة السريعة -->
         <div id="quickItemsGrid" class="quick-grid" style="display: none;"></div>
         <button id="toggleQuickBtn">📋 قائمة سريعة</button>
         
-        <!-- سلة -->
         <div class="cart-section">
             <div class="cart-list" id="cartList">
                 <div class="empty-cart">السلة فارغة</div>
             </div>
             
-            <!-- دفع -->
             <div class="checkout-bar">
                 <div>
                     <div class="total-text">الإجمالي</div>
@@ -429,10 +378,8 @@
         
     </div>
 
-    <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     
-    <!-- Firebase + المنطق -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, updateDoc, query, where, limit, writeBatch, increment, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -447,44 +394,31 @@
         });
         const db = getFirestore(app);
 
-        // ========== دوال مساعدة ==========
         function normalizeText(text) {
             if (!text) return "";
-            return text
-                .replace(/[أإآ]/g, 'ا')
-                .replace(/ة/g, 'ه')
-                .replace(/ى/g, 'ي')
-                .replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g, '')
-                .trim()
-                .toLowerCase();
+            return text.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g, '').trim().toLowerCase();
         }
 
-        // ========== متغيرات ==========
         let cart = [];
         let products = [];
         let quickItems = [];
         let catalog = {};
         let shift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0 };
 
-        // ========== الكاتالوج (Single Document) ==========
         async function loadCatalog() {
             try {
                 const snap = await getDoc(doc(db, "catalog", "products_list"));
-                if (snap.exists()) {
-                    catalog = snap.data();
-                }
+                if (snap.exists()) { catalog = snap.data(); }
             } catch(e) {}
         }
 
-        // ========== تحميل ==========
         async function init() {
             await loadCatalog();
             
             const snap = await getDocs(collection(db, "products"));
             products = [];
             snap.forEach(d => { 
-                let p = d.data(); 
-                p.id = d.id; 
+                let p = d.data(); p.id = d.id; 
                 if (p.quantity !== -99999) products.push(p); 
             });
 
@@ -500,7 +434,6 @@
             loadQuickItems();
         }
 
-        // ========== القائمة السريعة ==========
         async function loadQuickItems() {
             const grid = document.getElementById('quickItemsGrid');
             if (!grid) return;
@@ -550,7 +483,6 @@
             }
         });
 
-        // ========== سلة ==========
         function addToCart(p) {
             if (!p || p.quantity <= 0) { alert("غير متوفر"); return; }
             let ex = cart.find(i => i.id === p.id);
@@ -609,7 +541,6 @@
             document.getElementById('totalDisplay').innerText = total;
         }
 
-        // ========== دفع ==========
         document.getElementById('checkoutBtn').addEventListener('click', async () => {
             if (!shift.active) return alert("لا توجد وردية! افتح النظام الرئيسي أولاً.");
             if (!cart.length) return alert("السلة فارغة");
@@ -647,7 +578,6 @@
             }
         });
 
-        // ========== بحث ==========
         document.getElementById('barcodeInput').addEventListener('keypress', async (e) => {
             if (e.key !== 'Enter') return;
             const val = e.target.value.trim();
@@ -673,7 +603,6 @@
             alert("المنتج غير موجود أو غير متوفر");
         });
 
-        // ========== Dropdown البحث ==========
         function hideDropdown() {
             const dd = document.getElementById('liteDropdown');
             if (dd) dd.classList.remove('active');
@@ -684,10 +613,7 @@
             const dd = document.getElementById('liteDropdown');
             if (!dd) return;
             
-            if (val.length === 0) {
-                dd.classList.remove('active');
-                return;
-            }
+            if (val.length === 0) { dd.classList.remove('active'); return; }
             
             const ns = normalizeText(val);
             const matches = Object.entries(catalog)
@@ -707,8 +633,7 @@
                     
                     return `<div class="lite-dropdown-item" data-id="${id}">
                         <span class="lite-item-name">
-                            <span class="priority-dot ${dotColor}"></span>
-                            ${data.name}
+                            <span class="priority-dot ${dotColor}"></span>${data.name}
                         </span>
                         <span class="lite-item-price">${data.sellPrice || 0} ج</span>
                     </div>`;
@@ -728,8 +653,7 @@
                         } else {
                             const docSnap = await getDoc(doc(db, "products", productId));
                             if (docSnap.exists() && docSnap.data().quantity > 0 && docSnap.data().quantity !== -99999) {
-                                const p = docSnap.data();
-                                p.id = docSnap.id;
+                                const p = docSnap.data(); p.id = docSnap.id;
                                 addToCart(p);
                                 document.getElementById('barcodeInput').value = '';
                                 hideDropdown();
@@ -745,7 +669,6 @@
             }
         });
 
-        // إغلاق dropdown عند النقر خارجه
         document.addEventListener('click', (e) => {
             const dd = document.getElementById('liteDropdown');
             const input = document.getElementById('barcodeInput');
@@ -754,12 +677,14 @@
             }
         });
 
-        // ========== كاميرا ==========
         let qrCode, camOpen = false;
         document.getElementById('cameraBtn').addEventListener('click', () => {
             if (!window.Html5Qrcode) return alert("انتظر...");
             if (camOpen) {
                 qrCode.stop().then(() => {
+                    document.getElementById('reader').style.display = 'none';
+                    camOpen = false;
+                }).catch(() => {
                     document.getElementById('reader').style.display = 'none';
                     camOpen = false;
                 });
@@ -778,27 +703,24 @@
                         });
                     },
                     () => {}
-                ).then(() => { camOpen = true; }).catch(() => {
-                    alert("اسمح بالكاميرا");
+                ).then(() => { camOpen = true; }).catch((err) => {
+                    alert("تعذر فتح الكاميرا");
                     document.getElementById('reader').style.display = 'none';
                 });
             }
         });
 
-        // ========== حماية ==========
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'U')) e.preventDefault();
         });
 
-        // ========== إنشاء عنصر Dropdown ==========
         const searchBar = document.querySelector('.search-bar');
         const ddDiv = document.createElement('div');
         ddDiv.id = 'liteDropdown';
         ddDiv.className = 'lite-dropdown';
         searchBar.appendChild(ddDiv);
 
-        // ========== ابدأ ==========
         init();
         document.getElementById('barcodeInput').focus();
     </script>
