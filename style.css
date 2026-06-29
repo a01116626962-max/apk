@@ -488,7 +488,7 @@ main {
 /* ✅ الزر العائم للكاميرا (Floating Camera Button) */
 #floatingCameraBtn {
     position: fixed;
-    z-index: 1500;
+    z-index: 400;
     background: var(--primary);
     color: white;
     border: none;
@@ -1103,7 +1103,57 @@ form select:focus {
 .low-stock { background-color: #fef2f2 !important; color: var(--danger); font-weight: 700; }
 
 /* ==========================================
-   17. تجاوب الجوال (Mobile Responsive)
+   17. تحسين جداول الورديات والفواتير
+   ========================================== */
+#shiftsTab table tbody tr,
+#invoicesTab table tbody tr {
+    transition: all 0.2s ease;
+}
+
+#shiftsTab table tbody tr:hover,
+#invoicesTab table tbody tr:hover {
+    background: #f8fafc;
+}
+
+#shiftsTab table tbody td,
+#invoicesTab table tbody td {
+    padding: 11px 10px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+#shiftsTab table tbody tr:last-child td,
+#invoicesTab table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.shift-positive {
+    color: #10b981 !important;
+    font-weight: 700;
+}
+
+.shift-negative {
+    color: #ef4444 !important;
+    font-weight: 700;
+}
+
+.invoice-detail-btn {
+    background: #eff6ff;
+    color: #2563eb;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+}
+
+.invoice-detail-btn:hover {
+    background: #dbeafe;
+}
+
+/* ==========================================
+   18. تجاوب الجوال (Mobile Responsive)
    ========================================== */
 @media (max-width: 768px) {
     .quick-items-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1122,4 +1172,4 @@ form select:focus {
     .total-amount { font-size: 1.2rem; }
     #checkoutBtn { font-size: 1rem; padding: 12px; }
     .analytics-dashboard { grid-template-columns: 1fr; }
-}
+                     }
