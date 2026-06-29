@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>كاشير MAX</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Cairo', sans-serif;
             background: #f1f5f9;
@@ -21,6 +24,7 @@
             flex-direction: column;
         }
 
+        /* شريط علوي بسيط */
         .top-bar {
             background: #0f172a;
             color: white;
@@ -40,6 +44,7 @@
             color: #cbd5e1;
         }
 
+        /* المحتوى الرئيسي */
         .main-content {
             flex: 1;
             display: flex;
@@ -51,6 +56,7 @@
             gap: 8px;
         }
 
+        /* شريط البحث */
         .search-bar {
             display: flex;
             gap: 6px;
@@ -58,6 +64,7 @@
             padding: 8px;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            position: relative;
         }
 
         .search-bar input {
@@ -97,6 +104,66 @@
             border-color: #2563eb;
         }
 
+        /* Dropdown البحث */
+        .lite-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 8px;
+            left: 8px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .lite-dropdown.active { display: block; }
+
+        .lite-dropdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.82rem;
+            transition: background 0.2s;
+        }
+
+        .lite-dropdown-item:last-child { border-bottom: none; }
+        .lite-dropdown-item:hover { background: #eff6ff; }
+        .lite-dropdown-item:active { background: #dbeafe; }
+
+        .priority-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+
+        .dot-red { background: #ef4444; }
+        .dot-orange { background: #f97316; }
+        .dot-yellow { background: #eab308; }
+
+        .lite-item-name {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .lite-item-price {
+            color: #64748b;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        /* الكاميرا */
         #reader {
             display: none;
             width: 100%;
@@ -105,41 +172,58 @@
             border: 2px solid #e2e8f0;
         }
 
-        .quick-items-grid-lite {
+        /* القائمة السريعة */
+        .quick-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 6px;
+            background: white;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
-        .quick-items-grid-lite button {
-            padding: 8px 4px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
+        .quick-grid button {
             background: #f8fafc;
-            font-size: 0.7rem;
+            border: 1px solid #e2e8f0;
+            padding: 10px 4px;
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 0.72rem;
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            min-height: 55px;
-            color: #1e293b;
+            transition: all 0.2s;
+            color: #334155;
         }
 
-        .quick-items-grid-lite button img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
-
-        .quick-items-grid-lite button:active {
+        .quick-grid button:active {
             background: #2563eb;
             color: white;
             border-color: #2563eb;
+            transform: scale(0.95);
         }
 
+        #toggleQuickBtn {
+            width: 100%;
+            padding: 10px;
+            margin: 4px 0;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #9a3412;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+
+        #toggleQuickBtn:active {
+            background: #fed7aa;
+            transform: scale(0.98);
+        }
+
+        /* جدول السلة */
         .cart-section {
             flex: 1;
             background: white;
@@ -256,6 +340,7 @@
             font-size: 0.9rem;
         }
 
+        /* الفوتر */
         .checkout-bar {
             background: white;
             padding: 12px;
@@ -300,56 +385,39 @@
             opacity: 0.5;
             transform: none;
         }
-
-        #floatingCameraBtn {
-            position: fixed;
-            z-index: 400;
-            background: #2563eb;
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: none;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        #floatingCameraBtn:active {
-            transform: scale(0.9);
-            opacity: 0.8;
-        }
-
-        @media (max-width: 400px) {
-            .total-price { font-size: 1.2rem; }
-            #checkoutBtn { font-size: 1rem; padding: 12px; }
-            .quick-items-grid-lite { grid-template-columns: repeat(2, 1fr); }
-        }
     </style>
 </head>
 <body>
 
+    <!-- شريط علوي -->
     <div class="top-bar">
         <strong>⚡ كاشير MAX</strong>
         <span id="shiftLabel">لا توجد وردية</span>
     </div>
 
+    <!-- المحتوى -->
     <div class="main-content">
+        
+        <!-- بحث -->
         <div class="search-bar">
             <input type="text" id="barcodeInput" placeholder="باركود أو اسم المنتج..." autofocus>
             <button class="cam-btn" id="cameraBtn">📷</button>
         </div>
-
+        
+        <!-- كاميرا -->
         <div id="reader"></div>
-
-        <div id="quickItemsGridLite" class="quick-items-grid-lite"></div>
-
+        
+        <!-- القائمة السريعة -->
+        <div id="quickItemsGrid" class="quick-grid" style="display: none;"></div>
+        <button id="toggleQuickBtn">📋 قائمة سريعة</button>
+        
+        <!-- سلة -->
         <div class="cart-section">
             <div class="cart-list" id="cartList">
                 <div class="empty-cart">السلة فارغة</div>
             </div>
+            
+            <!-- دفع -->
             <div class="checkout-bar">
                 <div>
                     <div class="total-text">الإجمالي</div>
@@ -358,12 +426,16 @@
                 <button id="checkoutBtn">💳 دفع</button>
             </div>
         </div>
+        
     </div>
 
+    <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <!-- Firebase + المنطق -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, query, where, limit, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, where, limit, writeBatch, increment, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const app = initializeApp({
             apiKey: "AIzaSyDL5RFFP6WwxA5yGvhl0EF5mG0UKZi5GcA",
@@ -375,55 +447,110 @@
         });
         const db = getFirestore(app);
 
-        let cart = [];
-        let products = [];
-        let shift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0 };
-
-        function normalizeText(t) {
-            return t ? t.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g,'').trim().toLowerCase() : "";
+        // ========== دوال مساعدة ==========
+        function normalizeText(text) {
+            if (!text) return "";
+            return text
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/ة/g, 'ه')
+                .replace(/ى/g, 'ي')
+                .replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g, '')
+                .trim()
+                .toLowerCase();
         }
 
+        // ========== متغيرات ==========
+        let cart = [];
+        let products = [];
+        let quickItems = [];
+        let catalog = {};
+        let shift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0 };
+
+        // ========== الكاتالوج (Single Document) ==========
+        async function loadCatalog() {
+            try {
+                const snap = await getDoc(doc(db, "catalog", "products_list"));
+                if (snap.exists()) {
+                    catalog = snap.data();
+                }
+            } catch(e) {}
+        }
+
+        // ========== تحميل ==========
         async function init() {
+            await loadCatalog();
+            
             const snap = await getDocs(collection(db, "products"));
             products = [];
-            snap.forEach(d => {
-                let p = d.data();
-                p.id = d.id;
-                if (p.quantity !== -99999) products.push(p);
+            snap.forEach(d => { 
+                let p = d.data(); 
+                p.id = d.id; 
+                if (p.quantity !== -99999) products.push(p); 
             });
 
             const saved = localStorage.getItem('activeShift');
             if (saved) {
                 try {
                     shift = JSON.parse(saved);
-                    document.getElementById('shiftLabel').innerText = shift.active ? `${shift.cashierName} | ${shift.startCash} ج` : 'لا توجد وردية';
+                    document.getElementById('shiftLabel').innerText = 
+                        shift.active ? `${shift.cashierName} | ${shift.startCash} ج` : 'لا توجد وردية';
                 } catch(e) {}
             }
 
-            loadQuickItemsLite();
+            loadQuickItems();
         }
 
-        async function loadQuickItemsLite() {
-            const grid = document.getElementById('quickItemsGridLite');
+        // ========== القائمة السريعة ==========
+        async function loadQuickItems() {
+            const grid = document.getElementById('quickItemsGrid');
             if (!grid) return;
-            grid.innerHTML = '';
             try {
                 const snap = await getDocs(collection(db, "quickItems"));
-                snap.forEach(doc => {
-                    const item = doc.data();
+                quickItems = [];
+                snap.forEach(d => {
+                    const item = d.data();
                     if (item.active === false) return;
-                    const btn = document.createElement('button');
-                    btn.innerHTML = `${item.image ? `<img src="${item.image}" alt="">` : ''}<span>${item.name}</span>`;
-                    btn.onclick = () => {
-                        const p = products.find(x => x.id === item.productId && x.quantity > 0);
-                        if (p) addToCart({...p});
-                        else alert("غير متوفر");
-                    };
-                    grid.appendChild(btn);
+                    item.id = d.id;
+                    quickItems.push(item);
                 });
+                renderQuickGrid();
             } catch(e) {}
         }
 
+        function renderQuickGrid() {
+            const grid = document.getElementById('quickItemsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            if (quickItems.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#94a3b8;padding:10px;">لا توجد منتجات سريعة</div>';
+                return;
+            }
+            quickItems.forEach(item => {
+                const btn = document.createElement('button');
+                btn.textContent = item.name;
+                btn.addEventListener('click', () => {
+                    const p = products.find(x => x.id === item.productId && x.quantity > 0);
+                    if (p) addToCart({...p});
+                    else alert("المنتج غير متوفر");
+                });
+                grid.appendChild(btn);
+            });
+        }
+
+        document.getElementById('toggleQuickBtn').addEventListener('click', () => {
+            const grid = document.getElementById('quickItemsGrid');
+            const btn = document.getElementById('toggleQuickBtn');
+            if (grid.style.display === 'none' || grid.style.display === '') {
+                grid.style.display = 'grid';
+                btn.textContent = '📋 إخفاء القائمة';
+                loadQuickItems();
+            } else {
+                grid.style.display = 'none';
+                btn.textContent = '📋 قائمة سريعة';
+            }
+        });
+
+        // ========== سلة ==========
         function addToCart(p) {
             if (!p || p.quantity <= 0) { alert("غير متوفر"); return; }
             let ex = cart.find(i => i.id === p.id);
@@ -439,7 +566,7 @@
         function renderCart() {
             const el = document.getElementById('cartList');
             let total = 0;
-
+            
             if (!cart.length) {
                 el.innerHTML = '<div class="empty-cart">السلة فارغة</div>';
             } else {
@@ -460,7 +587,7 @@
                         <button class="del-btn" data-i="${i}">✕</button>
                     </div>`;
                 }).join('');
-
+                
                 el.querySelectorAll('.qty-btn').forEach(b => {
                     b.addEventListener('click', () => {
                         const i = parseInt(b.dataset.i);
@@ -471,7 +598,6 @@
                         else alert("الكمية لا تكفي");
                     });
                 });
-
                 el.querySelectorAll('.del-btn').forEach(b => {
                     b.addEventListener('click', () => {
                         cart.splice(parseInt(b.dataset.i), 1);
@@ -479,17 +605,18 @@
                     });
                 });
             }
-
+            
             document.getElementById('totalDisplay').innerText = total;
         }
 
+        // ========== دفع ==========
         document.getElementById('checkoutBtn').addEventListener('click', async () => {
             if (!shift.active) return alert("لا توجد وردية! افتح النظام الرئيسي أولاً.");
             if (!cart.length) return alert("السلة فارغة");
 
             const btn = document.getElementById('checkoutBtn');
             btn.disabled = true;
-            btn.innerText = '...';
+            btn.innerText = '⏳ جاري...';
 
             let ts = 0, tc = 0;
             const items = cart.map(i => {
@@ -501,58 +628,133 @@
             try {
                 const batch = writeBatch(db);
                 const ref = doc(collection(db, "invoices"));
-                batch.set(ref, {
-                    timestamp: new Date().toISOString(),
-                    cashier: shift.cashierName,
-                    items,
-                    totalSales: ts,
-                    totalCost: tc
-                });
+                batch.set(ref, { timestamp: new Date().toISOString(), cashier: shift.cashierName, items, totalSales: ts, totalCost: tc });
                 cart.forEach(i => batch.update(doc(db, "products", i.id), { quantity: increment(-i.cartQty) }));
                 await batch.commit();
 
                 shift.sales += ts;
                 localStorage.setItem('activeShift', JSON.stringify(shift));
-
+                
                 cart = [];
                 renderCart();
                 document.getElementById('barcodeInput').focus();
                 alert(`✅ تم البيع - ${ts} ج`);
             } catch(e) {
-                alert("❌ خطأ");
+                alert("❌ خطأ في عملية البيع");
             } finally {
                 btn.disabled = false;
                 btn.innerText = '💳 دفع';
             }
         });
 
+        // ========== بحث ==========
         document.getElementById('barcodeInput').addEventListener('keypress', async (e) => {
             if (e.key !== 'Enter') return;
             const val = e.target.value.trim();
             if (!val) return;
-
+            
             const ns = normalizeText(val);
-
+            
             const local = products.find(p => (p.barcode === val || (p.searchKey && p.searchKey.includes(ns))) && p.quantity > 0);
-            if (local) { addToCart({...local}); e.target.value = ''; return; }
-
+            if (local) { addToCart({...local}); e.target.value = ''; hideDropdown(); return; }
+            
             const s1 = await getDocs(query(collection(db, "products"), where("barcode", "==", val), limit(1)));
             if (!s1.empty) {
-                const p = s1.docs[0].data();
-                p.id = s1.docs[0].id;
-                if (p.quantity > 0) { addToCart(p); e.target.value = ''; return; }
+                const p = s1.docs[0].data(); p.id = s1.docs[0].id;
+                if (p.quantity > 0) { addToCart(p); e.target.value = ''; hideDropdown(); return; }
             }
-
+            
             const s2 = await getDocs(query(collection(db, "products"), where("searchKey", "array-contains", ns), limit(1)));
             if (!s2.empty) {
-                const p = s2.docs[0].data();
-                p.id = s2.docs[0].id;
-                if (p.quantity > 0) { addToCart(p); e.target.value = ''; return; }
+                const p = s2.docs[0].data(); p.id = s2.docs[0].id;
+                if (p.quantity > 0) { addToCart(p); e.target.value = ''; hideDropdown(); return; }
             }
-
-            alert("المنتج غير موجود");
+            
+            alert("المنتج غير موجود أو غير متوفر");
         });
 
+        // ========== Dropdown البحث ==========
+        function hideDropdown() {
+            const dd = document.getElementById('liteDropdown');
+            if (dd) dd.classList.remove('active');
+        }
+
+        document.getElementById('barcodeInput').addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            const dd = document.getElementById('liteDropdown');
+            if (!dd) return;
+            
+            if (val.length === 0) {
+                dd.classList.remove('active');
+                return;
+            }
+            
+            const ns = normalizeText(val);
+            const matches = Object.entries(catalog)
+                .filter(([id, data]) => {
+                    const searchStr = normalizeText((data.name || '') + ' ' + (data.barcode || ''));
+                    return searchStr.includes(ns);
+                })
+                .sort((a, b) => (a[1].priority || 4) - (b[1].priority || 4))
+                .slice(0, 8);
+            
+            if (matches.length > 0) {
+                dd.innerHTML = matches.map(([id, data]) => {
+                    let dotColor = '';
+                    if (data.priority === 1) dotColor = 'dot-red';
+                    else if (data.priority === 2) dotColor = 'dot-orange';
+                    else if (data.priority === 3) dotColor = 'dot-yellow';
+                    
+                    return `<div class="lite-dropdown-item" data-id="${id}">
+                        <span class="lite-item-name">
+                            <span class="priority-dot ${dotColor}"></span>
+                            ${data.name}
+                        </span>
+                        <span class="lite-item-price">${data.sellPrice || 0} ج</span>
+                    </div>`;
+                }).join('');
+                
+                dd.classList.add('active');
+                
+                dd.querySelectorAll('.lite-dropdown-item').forEach(item => {
+                    item.addEventListener('click', async () => {
+                        const productId = item.dataset.id;
+                        const product = products.find(p => p.id === productId && p.quantity > 0);
+                        if (product) {
+                            addToCart({...product});
+                            document.getElementById('barcodeInput').value = '';
+                            hideDropdown();
+                            document.getElementById('barcodeInput').focus();
+                        } else {
+                            const docSnap = await getDoc(doc(db, "products", productId));
+                            if (docSnap.exists() && docSnap.data().quantity > 0 && docSnap.data().quantity !== -99999) {
+                                const p = docSnap.data();
+                                p.id = docSnap.id;
+                                addToCart(p);
+                                document.getElementById('barcodeInput').value = '';
+                                hideDropdown();
+                                document.getElementById('barcodeInput').focus();
+                            } else {
+                                alert("المنتج غير متوفر حالياً");
+                            }
+                        }
+                    });
+                });
+            } else {
+                dd.classList.remove('active');
+            }
+        });
+
+        // إغلاق dropdown عند النقر خارجه
+        document.addEventListener('click', (e) => {
+            const dd = document.getElementById('liteDropdown');
+            const input = document.getElementById('barcodeInput');
+            if (dd && !dd.contains(e.target) && e.target !== input) {
+                dd.classList.remove('active');
+            }
+        });
+
+        // ========== كاميرا ==========
         let qrCode, camOpen = false;
         document.getElementById('cameraBtn').addEventListener('click', () => {
             if (!window.Html5Qrcode) return alert("انتظر...");
@@ -583,69 +785,21 @@
             }
         });
 
-        function initFloatingButton() {
-            if (document.getElementById('floatingCameraBtn')) return;
-            const floatBtn = document.createElement('button');
-            floatBtn.id = 'floatingCameraBtn';
-            floatBtn.innerHTML = '📷';
-            const saved = JSON.parse(localStorage.getItem('liteFloatingBtnStyles'));
-            floatBtn.style.cssText = saved || 'position:fixed;bottom:80px;right:20px;z-index:400;width:56px;height:56px;border-radius:50%;background:#2563eb;color:white;border:none;font-size:24px;box-shadow:0 4px 15px rgba(0,0,0,0.3);cursor:pointer;';
-            document.body.appendChild(floatBtn);
-
-            floatBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.getElementById('cameraBtn')?.click();
-            });
-
-            let pressTimer, isDragging = false, startDist = 0;
-            floatBtn.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 2) {
-                    startDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                } else {
-                    pressTimer = setTimeout(() => {
-                        isDragging = true;
-                        floatBtn.style.transition = 'none';
-                        floatBtn.style.opacity = '0.8';
-                    }, 3000);
-                }
-            });
-
-            floatBtn.addEventListener('touchmove', (e) => {
-                if (e.touches.length === 2) {
-                    e.preventDefault();
-                    const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                    const scale = dist / startDist;
-                    const w = parseFloat(floatBtn.style.width) || 56;
-                    const ns = Math.max(40, Math.min(100, w * scale));
-                    floatBtn.style.width = ns + 'px';
-                    floatBtn.style.height = ns + 'px';
-                    floatBtn.style.fontSize = (ns * 0.4) + 'px';
-                    startDist = dist;
-                } else if (isDragging) {
-                    e.preventDefault();
-                    const t = e.touches[0];
-                    floatBtn.style.top = (t.clientY - 28) + 'px';
-                    floatBtn.style.right = (window.innerWidth - t.clientX - 28) + 'px';
-                }
-            });
-
-            floatBtn.addEventListener('touchend', () => {
-                clearTimeout(pressTimer);
-                if (isDragging) {
-                    isDragging = false;
-                    floatBtn.style.opacity = '1';
-                }
-                localStorage.setItem('liteFloatingBtnStyles', JSON.stringify(floatBtn.style.cssText));
-            });
-        }
-
+        // ========== حماية ==========
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'U')) e.preventDefault();
         });
 
+        // ========== إنشاء عنصر Dropdown ==========
+        const searchBar = document.querySelector('.search-bar');
+        const ddDiv = document.createElement('div');
+        ddDiv.id = 'liteDropdown';
+        ddDiv.className = 'lite-dropdown';
+        searchBar.appendChild(ddDiv);
+
+        // ========== ابدأ ==========
         init();
-        initFloatingButton();
         document.getElementById('barcodeInput').focus();
     </script>
 </body>
