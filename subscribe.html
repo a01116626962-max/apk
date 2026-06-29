@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفعيل الاشتراك - نظام السوبر ماركت</title>
+    <title>تفعيل الاشتراك - GAD ZONE</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -63,7 +63,6 @@
             gap: 16px;
         }
 
-        /* بطاقة رئيسية */
         .main-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -107,7 +106,6 @@
             margin-bottom: 20px;
         }
 
-        /* قسمين الباقات */
         .plans-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -123,17 +121,10 @@
             transition: all 0.3s ease;
         }
 
-        .plan-card.pro {
-            border-top: 3px solid var(--pro-color);
-        }
+        .plan-card.pro { border-top: 3px solid var(--pro-color); }
+        .plan-card.max { border-top: 3px solid var(--max-color); }
 
-        .plan-card.max {
-            border-top: 3px solid var(--max-color);
-        }
-
-        .plan-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .plan-card:hover { background: rgba(255, 255, 255, 0.05); }
 
         .plan-label {
             font-size: 0.75rem;
@@ -200,30 +191,17 @@
             color: white;
         }
 
-        .plan-card.pro .plan-btn {
-            background: linear-gradient(135deg, var(--pro-color), #1d4ed8);
-        }
-
-        .plan-card.max .plan-btn {
-            background: linear-gradient(135deg, var(--max-color), #7c3aed);
-        }
+        .plan-card.pro .plan-btn { background: linear-gradient(135deg, var(--pro-color), #1d4ed8); }
+        .plan-card.max .plan-btn { background: linear-gradient(135deg, var(--max-color), #7c3aed); }
 
         .plan-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .plan-btn:active {
-            transform: translateY(0);
-        }
+        .plan-btn:active { transform: translateY(0); }
+        .plan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .plan-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* رسائل */
         .message-box {
             display: none;
             padding: 12px;
@@ -254,7 +232,6 @@
             color: #fca5a5;
         }
 
-        /* روابط */
         .links {
             text-align: center;
             margin-top: 8px;
@@ -267,9 +244,7 @@
             transition: all 0.3s ease;
         }
 
-        .back-link:hover {
-            color: var(--text-main);
-        }
+        .back-link:hover { color: var(--text-main); }
 
         .contact-info {
             margin-top: 12px;
@@ -280,36 +255,26 @@
             text-align: center;
         }
 
-        .contact-info a {
-            color: #3b82f6;
-            text-decoration: none;
-        }
+        .contact-info a { color: #3b82f6; text-decoration: none; }
 
-        /* تجاوب */
         @media (max-width: 480px) {
-            .plans-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .main-card {
-                padding: 20px 14px;
-            }
+            .plans-container { grid-template-columns: 1fr; }
+            .main-card { padding: 20px 14px; }
         }
     </style>
 </head>
 <body>
     
     <div class="container">
-        <!-- البطاقة الرئيسية -->
         <div class="main-card">
             <div class="logo-icon">🔐</div>
+            
             <h1>تفعيل الاشتراك</h1>
             <p class="subtitle">أدخل كود التفعيل لتجديد أو تمديد اشتراكك</p>
             
-            <!-- قسمين الباقات -->
             <div class="plans-container">
                 
-                <!-- ✅ PRO -->
+                <!-- PRO -->
                 <div class="plan-card pro">
                     <div class="plan-label">🛒 الموقع الأساسي (PRO)</div>
                     <div class="plan-status" id="status-pro">جاري التحميل...</div>
@@ -324,7 +289,7 @@
                     <button id="btn-pro" class="plan-btn">تفعيل PRO</button>
                 </div>
                 
-                <!-- ✅ MAX -->
+                <!-- MAX -->
                 <div class="plan-card max">
                     <div class="plan-label">⚡ الموقع المخفف (MAX)</div>
                     <div class="plan-status" id="status-max">جاري التحميل...</div>
@@ -341,11 +306,9 @@
                 
             </div>
             
-            <!-- رسالة النتيجة العامة -->
             <div id="msg" class="message-box"></div>
         </div>
         
-        <!-- روابط -->
         <div class="links">
             <a href="index.html" class="back-link">← العودة للنظام</a>
         </div>
@@ -357,33 +320,23 @@
     </div>
     
     <script>
-        // ⚙️ الإعدادات الثابتة
         const API_URL = "https://abogad.vercel.app";
         const CLIENT_NAME = "abogad";
         
         // ==========================================
-        // ✅ الحماية من جهة العميل
+        // الحماية
         // ==========================================
         (function() {
             document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
-                if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
-                if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
-                if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
+                if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
             });
-            
-            setInterval(function() {
-                if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
-                    console.clear();
-                }
-            }, 1000);
         })();
         
         // ==========================================
-        // 1. جلب وعرض الحالة
+        // جلب وعرض الحالة
         // ==========================================
         async function fetchStatus() {
             try {
@@ -408,11 +361,8 @@
                             ? `✅ مفعل: ${data.remaining_days} يوم` 
                             : `❌ غير مفعل`;
                     }
-                } else {
-                    const el = document.getElementById('status-pro');
-                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
                 }
-                
+
                 if (maxRes && maxRes.ok) {
                     const data = await maxRes.json();
                     const el = document.getElementById('status-max');
@@ -421,9 +371,6 @@
                             ? `✅ مفعل: ${data.remaining_days} يوم` 
                             : `❌ غير مفعل`;
                     }
-                } else {
-                    const el = document.getElementById('status-max');
-                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
                 }
             } catch (e) {
                 console.error("Fetch Error");
@@ -431,7 +378,7 @@
         }
 
         // ==========================================
-        // 2. التنسيق التلقائي للحقول
+        // تنسيق الحقول
         // ==========================================
         function setupFormatter(inputId) {
             const el = document.getElementById(inputId);
@@ -446,20 +393,19 @@
         setupFormatter('input-max');
 
         // ==========================================
-        // 3. دوال التفعيل
+        // رسالة
         // ==========================================
         function showMessage(text, type) {
             const msgBox = document.getElementById('msg');
             msgBox.textContent = text;
             msgBox.className = 'message-box ' + type;
             msgBox.style.display = 'block';
-            
-            // إخفاء تلقائي بعد 5 ثواني
-            setTimeout(() => {
-                msgBox.style.display = 'none';
-            }, 5000);
+            setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
         }
 
+        // ==========================================
+        // تفعيل الكود
+        // ==========================================
         async function activateCode(inputId, type, btnId) {
             const inputEl = document.getElementById(inputId);
             const btnEl = document.getElementById(btnId);
@@ -486,7 +432,7 @@
                     const newDays = data.remaining_days || data.days_added || '---';
                     showMessage(`🎉 تم تفعيل باقة ${type} بنجاح! الاشتراك الآن ${newDays} يوم`, 'success');
                     inputEl.value = '';
-                    fetchStatus(); // إنعاش لحظي
+                    fetchStatus();
                 } else {
                     showMessage(data.message || data.error || `❌ كود ${type} غير صحيح`, 'error');
                 }
@@ -502,7 +448,6 @@
         document.getElementById('btn-pro')?.addEventListener('click', () => activateCode('input-pro', 'PRO', 'btn-pro'));
         document.getElementById('btn-max')?.addEventListener('click', () => activateCode('input-max', 'MAX', 'btn-max'));
 
-        // السماح بالتفعيل عند الضغط على Enter
         document.getElementById('input-pro')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') activateCode('input-pro', 'PRO', 'btn-pro');
         });
@@ -510,9 +455,7 @@
             if (e.key === 'Enter') activateCode('input-max', 'MAX', 'btn-max');
         });
 
-        // ==========================================
-        // 4. تحميل الحالة عند فتح الصفحة
-        // ==========================================
+        // تحميل الحالة
         document.addEventListener('DOMContentLoaded', fetchStatus);
     </script>
     
