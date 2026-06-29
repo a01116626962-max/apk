@@ -192,7 +192,6 @@
 
         .plan-card.pro .plan-btn { background: linear-gradient(135deg, var(--pro-color), #1d4ed8); }
         .plan-card.max .plan-btn { background: linear-gradient(135deg, var(--max-color), #7c3aed); }
-
         .plan-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .plan-btn:active { transform: translateY(0); }
         .plan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -208,7 +207,10 @@
             animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         .message-box.success {
             display: block;
@@ -225,14 +227,7 @@
         }
 
         .links { text-align: center; margin-top: 8px; }
-
-        .back-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: all 0.3s ease; }
         .back-link:hover { color: var(--text-main); }
 
         .contact-info {
@@ -295,69 +290,121 @@
         const API_URL = "https://abogad.vercel.app";
         const CLIENT_NAME = "abogad";
         
-        // حماية
         (function() {
             document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
-                if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
+                if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
+                if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
             });
         })();
         
-        // جلب الحالة
         async function fetchStatus() {
             try {
                 const [proRes, maxRes] = await Promise.all([
-                    fetch(`${API_URL}/api/codes/check-subscription`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_name:CLIENT_NAME,site_type:'PRO'})}).catch(()=>null),
-                    fetch(`${API_URL}/api/codes/check-subscription`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_name:CLIENT_NAME,site_type:'MAX'})}).catch(()=>null)
+                    fetch(`${API_URL}/api/codes/check-subscription`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ client_name: CLIENT_NAME, site_type: 'PRO' })
+                    }).catch(() => null),
+                    fetch(`${API_URL}/api/codes/check-subscription`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ client_name: CLIENT_NAME, site_type: 'MAX' })
+                    }).catch(() => null)
                 ]);
-                if(proRes&&proRes.ok){const d=await proRes.json();const el=document.getElementById('status-pro');if(el)el.innerHTML=(d.active&&d.remaining_days>0)?`✅ مفعل: ${d.remaining_days} يوم`:`❌ غير مفعل`;}
-                if(maxRes&&maxRes.ok){const d=await maxRes.json();const el=document.getElementById('status-max');if(el)el.innerHTML=(d.active&&d.remaining_days>0)?`✅ مفعل: ${d.remaining_days} يوم`:`❌ غير مفعل`;}
-            } catch(e) {}
+
+                if (proRes && proRes.ok) {
+                    const data = await proRes.json();
+                    const el = document.getElementById('status-pro');
+                    if (el) { el.innerHTML = (data.active && data.remaining_days > 0) ? `✅ مفعل: ${data.remaining_days} يوم` : `❌ غير مفعل`; }
+                } else {
+                    const el = document.getElementById('status-pro');
+                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
+                }
+                
+                if (maxRes && maxRes.ok) {
+                    const data = await maxRes.json();
+                    const el = document.getElementById('status-max');
+                    if (el) { el.innerHTML = (data.active && data.remaining_days > 0) ? `✅ مفعل: ${data.remaining_days} يوم` : `❌ غير مفعل`; }
+                } else {
+                    const el = document.getElementById('status-max');
+                    if (el) el.innerHTML = `⚠️ تعذر التحقق`;
+                }
+            } catch (e) {}
         }
-        
-        // تنسيق
-        function setupFormatter(id) {
-            const el = document.getElementById(id);
-            if(!el)return;
-            el.addEventListener('input',(e)=>{let raw=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(raw.length>16)raw=raw.substring(0,16);e.target.value=raw.match(/.{1,4}/g)?.join('-')||raw;});
+
+        function setupFormatter(inputId) {
+            const el = document.getElementById(inputId);
+            if (!el) return;
+            el.addEventListener('input', (e) => {
+                let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                if (raw.length > 16) raw = raw.substring(0, 16);
+                e.target.value = raw.match(/.{1,4}/g)?.join('-') || raw;
+            });
         }
         setupFormatter('input-pro');
         setupFormatter('input-max');
-        
-        // رسالة
-        function showMessage(text,type) {
-            const mb=document.getElementById('msg');
-            mb.textContent=text;
-            mb.className='message-box '+type;
-            mb.style.display='block';
-            setTimeout(()=>{mb.style.display='none';},5000);
+
+        function showMessage(text, type) {
+            const msgBox = document.getElementById('msg');
+            msgBox.textContent = text;
+            msgBox.className = 'message-box ' + type;
+            msgBox.style.display = 'block';
+            setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
         }
-        
-        // تفعيل
-        async function activateCode(inputId,type,btnId) {
-            const inputEl=document.getElementById(inputId),btnEl=document.getElementById(btnId);
-            const cleanCode=inputEl.value.replace(/-/g,'').trim();
-            if(cleanCode.length!==16){showMessage(`⚠️ كود ${type} غير مكتمل`,'error');inputEl.focus();return;}
-            btnEl.disabled=true;btnEl.innerText="⏳ جاري التفعيل...";
-            try{
-                const r=await fetch(`${API_URL}/api/codes/activate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:cleanCode,client_name:CLIENT_NAME,site_type:type})});
-                const d=await r.json();
-                if(r.ok&&d.success){const nd=d.remaining_days||d.days_added||'---';showMessage(`🎉 تم تفعيل باقة ${type} بنجاح! الاشتراك الآن ${nd} يوم`,'success');inputEl.value='';fetchStatus();}
-                else{showMessage(d.message||d.error||`❌ كود ${type} غير صحيح`,'error');}
-            }catch(e){showMessage('❌ خطأ في الاتصال بالخادم','error');}
-            finally{btnEl.disabled=false;btnEl.innerText=`تفعيل ${type}`;}
+
+        async function activateCode(inputId, type, btnId) {
+            const inputEl = document.getElementById(inputId);
+            const btnEl = document.getElementById(btnId);
+            const cleanCode = inputEl.value.replace(/-/g, '').trim();
+
+            if (cleanCode.length !== 16) {
+                showMessage(`⚠️ كود ${type} غير مكتمل - يجب أن يكون 16 حرف`, 'error');
+                inputEl.focus();
+                return;
+            }
+
+            btnEl.disabled = true;
+            btnEl.innerText = "⏳ جاري التفعيل...";
+
+            try {
+                const response = await fetch(`${API_URL}/api/codes/activate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: cleanCode, client_name: CLIENT_NAME, site_type: type })
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    const newDays = data.remaining_days || data.days_added || '---';
+                    showMessage(`🎉 تم تفعيل باقة ${type} بنجاح! الاشتراك الآن ${newDays} يوم`, 'success');
+                    inputEl.value = '';
+                    fetchStatus();
+                } else {
+                    showMessage(data.message || data.error || `❌ كود ${type} غير صحيح`, 'error');
+                }
+            } catch (e) {
+                showMessage('❌ خطأ في الاتصال بالخادم. حاول مرة أخرى.', 'error');
+            } finally {
+                btnEl.disabled = false;
+                btnEl.innerText = `تفعيل ${type}`;
+            }
         }
-        
-        // ربط
-        document.getElementById('btn-pro')?.addEventListener('click',()=>activateCode('input-pro','PRO','btn-pro'));
-        document.getElementById('btn-max')?.addEventListener('click',()=>activateCode('input-max','MAX','btn-max'));
-        document.getElementById('input-pro')?.addEventListener('keypress',function(e){if(e.key==='Enter')activateCode('input-pro','PRO','btn-pro');});
-        document.getElementById('input-max')?.addEventListener('keypress',function(e){if(e.key==='Enter')activateCode('input-max','MAX','btn-max');});
-        
-        // بدء
-        document.addEventListener('DOMContentLoaded',fetchStatus);
+
+        document.getElementById('btn-pro')?.addEventListener('click', () => activateCode('input-pro', 'PRO', 'btn-pro'));
+        document.getElementById('btn-max')?.addEventListener('click', () => activateCode('input-max', 'MAX', 'btn-max'));
+
+        document.getElementById('input-pro')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') activateCode('input-pro', 'PRO', 'btn-pro');
+        });
+        document.getElementById('input-max')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') activateCode('input-max', 'MAX', 'btn-max');
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchStatus);
     </script>
     
 </body>
