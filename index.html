@@ -19,7 +19,6 @@
         <div class="sidebar-header">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <h2>القائمة</h2>
-                <!-- ✅ شارة الاشتراك -->
                 <span id="subscriptionBadge" class="subscription-badge-mini active-subscription" style="display: none;">
                     <span id="remainingDaysText">--</span>
                 </span>
@@ -40,7 +39,6 @@
                         <span class="nav-icon">🛒</span>
                         <span class="nav-label">شاشة البيع</span>
                     </button>
-                    <!-- ✅ رابط الصفحة المخففة (Lite) -->
                     <button id="navLitePosBtn" class="nav-item" onclick="window.location.href='lite.html'">
                         <span class="nav-icon">⚡</span>
                         <span class="nav-label">البيع السريع</span>
@@ -79,6 +77,10 @@
                         <button id="navQuickItemsAdminBtn" class="nav-item">
                             <span class="nav-icon">⭐</span>
                             <span class="nav-label">القائمة السريعة</span>
+                        </button>
+                        <button id="navSearchPriorityBtn" class="nav-item">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-label">أولويات البحث</span>
                         </button>
                         <button id="navCashiersBtn" class="nav-item">
                             <span class="nav-icon">👥</span>
@@ -163,7 +165,6 @@
                     <div id="searchDropdown" class="search-dropdown" style="display: none;"></div>
                 </div>
                 <button id="startCameraBtn" class="icon-btn">📷</button>
-                <!-- ✅ Toggle Switch بدون نصوص -->
                 <label class="toggle-switch-label">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
                     <span class="toggle-switch"></span>
@@ -172,11 +173,10 @@
             
             <div id="reader" class="camera-container"></div>
             
-            <!-- ✅ القائمة السريعة مخفية افتراضياً -->
             <div id="quickItemsGrid" class="quick-items-grid" style="display: none;"></div>
             
-            <!-- ✅ زر Toggle للقائمة السريعة بدون نصوص -->
             <button id="toggleQuickItemsBtn" class="icon-btn" style="margin-top: 8px;">📋</button>
+            <button id="showQuickItemsPopupBtn" class="show-popup-btn">⭐ عرض القائمة السريعة كاملة</button>
             
             <div class="cart-area">
                 <table id="cartTable">
@@ -273,7 +273,7 @@
         </div>
     </div>
 
-    <!-- ✅ مودال تحذير الاشتراك -->
+    <!-- مودال تحذير الاشتراك -->
     <div id="subscriptionWarningModal" class="modal subscription-warning-modal" style="display: none;">
         <div class="modal-content">
             <div class="warning-icon">⚠️</div>
@@ -335,6 +335,19 @@
             </div>
         </section>
 
+        <section id="searchPriorityTab" style="display: none;">
+            <h3>🎯 أولويات العرض للبحث</h3>
+            <p style="color:var(--text-secondary);margin-bottom:12px;">تحكم في ترتيب ظهور المنتجات في نتائج البحث</p>
+            <div style="overflow-x:auto;">
+                <table id="searchPriorityTable">
+                    <thead>
+                        <tr><th>المنتج</th><th>الباركود</th><th>الأولوية الحالية</th><th>تغيير الأولوية</th></tr>
+                    </thead>
+                    <tbody id="searchPriorityBody"><tr><td colspan="4">جاري التحميل...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
         <section id="expensesTab" style="display: none;">
             <h3>تسجيل مصروف يومي</h3>
             <form id="addExpenseForm">
@@ -360,6 +373,24 @@
 
         <section id="statsTab" style="display: none;">
             <h3>📊 الإحصائيات</h3>
+            <div class="filter-bar">
+                <select id="statsFilter">
+                    <option value="all">الكل</option>
+                    <option value="lastShift">آخر وردية</option>
+                    <option value="today">يوم</option>
+                    <option value="week">أسبوع</option>
+                    <option value="month">شهر</option>
+                    <option value="3months">3 شهور</option>
+                    <option value="6months">6 شهور</option>
+                    <option value="year">سنة</option>
+                    <option value="custom">مدة مخصصة</option>
+                </select>
+                <div id="customDateRange" style="display:none;gap:6px;" class="flex-row">
+                    <input type="date" id="customStartDate" style="flex:1;">
+                    <input type="date" id="customEndDate" style="flex:1;">
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="loadStats()">تطبيق</button>
+            </div>
             <div class="stats-grid">
                 <div class="stat-card"><h4>المبيعات</h4><p id="totalSalesStat">0</p></div>
                 <div class="stat-card"><h4>المصروفات</h4><p id="totalExpensesStat">0</p></div>
@@ -393,11 +424,73 @@
             <div id="quickItemsAdminList" class="quick-admin-grid"></div>
         </section>
 
-        <section id="salesReportTab" style="display: none;"><h3>📊 المبيعات</h3><div class="filter-bar"><select id="salesFilter"><option value="all">الكل</option><option value="today">اليوم</option><option value="week">أسبوع</option><option value="month">شهر</option></select><button class="btn btn-sm btn-primary" onclick="loadSalesReport(document.getElementById('salesFilter').value)">تطبيق</button></div><table><thead><tr><th>التاريخ</th><th>الكاشير</th><th>المبلغ</th></tr></thead><tbody id="salesReportBody"></tbody></table></section>
-        <section id="expensesReportTab" style="display: none;"><h3>📋 المصروفات</h3><div class="filter-bar"><select id="expensesFilter"><option value="all">الكل</option><option value="today">اليوم</option></select><button class="btn btn-sm btn-primary" onclick="loadExpensesReport(document.getElementById('expensesFilter').value)">تطبيق</button></div><div class="highlight-box"><div class="flex-row"><input type="text" id="expenseTitleReport" placeholder="البند" class="flex-2"><input type="number" id="expenseAmountReport" placeholder="المبلغ" class="flex-1"><button id="addExpenseFromReportBtn" class="btn btn-sm btn-primary">إضافة</button></div></div><table><thead><tr><th>التاريخ</th><th>البند</th><th>المبلغ</th></tr></thead><tbody id="expensesReportBody"></tbody></table></section>
-        <section id="profitsReportTab" style="display: none;"><h3>💰 الأرباح</h3><div class="filter-bar"><select id="profitsFilter"><option value="all">الكل</option></select><button class="btn btn-sm btn-primary" onclick="loadProfitsReport(document.getElementById('profitsFilter').value)">تطبيق</button></div><table><thead><tr><th>المبيعات</th><th>التكلفة</th><th>الربح</th></tr></thead><tbody id="profitsReportBody"></tbody></table></section>
-        <section id="shiftsTab" style="display: none;"><h3>🔄 الورديات</h3><table><thead><tr><th>الكاشير</th><th>البداية</th><th>الفرق</th></tr></thead><tbody id="shiftsBody"></tbody></table></section>
-        <section id="invoicesTab" style="display: none;"><h3>🧾 الفواتير</h3><table><thead><tr><th>التاريخ</th><th>الإجمالي</th></tr></thead><tbody id="invoicesBody"></tbody></table></section>
+        <section id="salesReportTab" style="display: none;">
+            <h3>📊 المبيعات</h3>
+            <div class="filter-bar">
+                <select id="salesFilter">
+                    <option value="all">الكل</option>
+                    <option value="lastShift">آخر وردية</option>
+                    <option value="today">يوم</option>
+                    <option value="week">أسبوع</option>
+                    <option value="month">شهر</option>
+                    <option value="3months">3 شهور</option>
+                    <option value="6months">6 شهور</option>
+                    <option value="year">سنة</option>
+                    <option value="custom">مدة مخصصة</option>
+                </select>
+                <button class="btn btn-sm btn-primary" onclick="loadSalesReport(document.getElementById('salesFilter').value)">تطبيق</button>
+            </div>
+            <table><thead><tr><th>التاريخ</th><th>الكاشير</th><th>المبلغ</th></tr></thead><tbody id="salesReportBody"></tbody></table>
+        </section>
+        
+        <section id="expensesReportTab" style="display: none;">
+            <h3>📋 المصروفات</h3>
+            <div class="filter-bar">
+                <select id="expensesFilter">
+                    <option value="all">الكل</option>
+                    <option value="lastShift">آخر وردية</option>
+                    <option value="today">يوم</option>
+                    <option value="week">أسبوع</option>
+                    <option value="month">شهر</option>
+                    <option value="3months">3 شهور</option>
+                    <option value="6months">6 شهور</option>
+                    <option value="year">سنة</option>
+                    <option value="custom">مدة مخصصة</option>
+                </select>
+                <button class="btn btn-sm btn-primary" onclick="loadExpensesReport(document.getElementById('expensesFilter').value)">تطبيق</button>
+            </div>
+            <div class="highlight-box"><div class="flex-row"><input type="text" id="expenseTitleReport" placeholder="البند" class="flex-2"><input type="number" id="expenseAmountReport" placeholder="المبلغ" class="flex-1"><button id="addExpenseFromReportBtn" class="btn btn-sm btn-primary">إضافة</button></div></div>
+            <table><thead><tr><th>التاريخ</th><th>البند</th><th>المبلغ</th></tr></thead><tbody id="expensesReportBody"></tbody></table>
+        </section>
+        
+        <section id="profitsReportTab" style="display: none;">
+            <h3>💰 الأرباح</h3>
+            <div class="filter-bar">
+                <select id="profitsFilter">
+                    <option value="all">الكل</option>
+                    <option value="lastShift">آخر وردية</option>
+                    <option value="today">يوم</option>
+                    <option value="week">أسبوع</option>
+                    <option value="month">شهر</option>
+                    <option value="3months">3 شهور</option>
+                    <option value="6months">6 شهور</option>
+                    <option value="year">سنة</option>
+                    <option value="custom">مدة مخصصة</option>
+                </select>
+                <button class="btn btn-sm btn-primary" onclick="loadProfitsReport(document.getElementById('profitsFilter').value)">تطبيق</button>
+            </div>
+            <table><thead><tr><th>المبيعات</th><th>التكلفة</th><th>الربح</th></tr></thead><tbody id="profitsReportBody"></tbody></table>
+        </section>
+        
+        <section id="shiftsTab" style="display: none;">
+            <h3>🔄 الورديات</h3>
+            <table><thead><tr><th>الكاشير</th><th>البداية</th><th>النهاية</th><th>الفرق</th></tr></thead><tbody id="shiftsBody"></tbody></table>
+        </section>
+        
+        <section id="invoicesTab" style="display: none;">
+            <h3>🧾 الفواتير</h3>
+            <table><thead><tr><th>التاريخ</th><th>الكاشير</th><th>الإجمالي</th></tr></thead><tbody id="invoicesBody"></tbody></table>
+        </section>
 
     </main>
 
