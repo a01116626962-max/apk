@@ -1,4 +1,746 @@
+// ==========================================
+// 1. استدعاء مكتبات Firebase
+// ==========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, limit, writeBatch, increment, orderBy, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDL5RFFP6WwxA5yGvhl0EF5mG0UKZi5GcA",
+  authDomain: "a01116626962-82e29.firebaseapp.com",
+  projectId: "a01116626962-82e29",
+  storageBucket: "a01116626962-82e29.firebasestorage.app",
+  messagingSenderId: "245357920580",
+  appId: "1:245357920580:web:ef3fdd3d441db66ce31711",
+  measurementId: "G-03K80R8RYM"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+// ==========================================
+// 2. المتغيرات العامة وإعدادات الأمان
+// ==========================================
+const ADMIN_PASSWORD = "1234";
+const API_BASE_URL = "https://abogad.vercel.app";
+const GLOBAL_CLIENT_NAME = "abogad";
+let cart = [];
+let productsList = [];
+let quickItemsList = [];
+let isAdminLoggedIn = false;
+
+let currentShift = {
+    active: false,
+    cashierName: "",
+    startCash: 0,
+    sales: 0,
+    drops: 0,
+    cashierExpenses: 0,
+    startTime: null
+};
+
+const barcodeDebounceTimers = {};
+
+// ==========================================
+// 3. دوال مساعدة
+// ==========================================
+function normalizeText(text) {
+    if (!text) return "";
+    return text
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g, '')
+        .trim()
+        .toLowerCase();
+}
+
+function compressImage(file, maxWidth = 200, maxHeight = 200, quality = 0.5) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function isValidProduct(product) {
+    return product && product.quantity !== -99999 && product.quantity > 0;
+}
+
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function updateSidebarActive(activeButtonId) {
+    document.querySelectorAll('.sidebar-nav .nav-item').forEach(btn => {
+        btn.classList.remove('active-nav', 'active-sub');
+    });
+    
+    const activeBtn = document.getElementById(activeButtonId);
+    if (activeBtn) {
+        if (activeBtn.closest('.admin-sub-menu')) {
+            activeBtn.classList.add('active-sub');
+        } else {
+            activeBtn.classList.add('active-nav');
+        }
+    }
+}
+
+// ==========================================
+// 4. عناصر DOM الرئيسية
+// ==========================================
+const navPosBtn = document.getElementById('navPosBtn');
+const navAdminBtn = document.getElementById('navAdminBtn');
+const posSection = document.getElementById('posSection');
+const adminSection = document.getElementById('adminSection');
+const authModal = document.getElementById('authModal');
+const startShiftModal = document.getElementById('startShiftModal');
+
+const allAdminTabs = [
+    'inventoryTab', 'expensesTab', 'cashiersTab', 'statsTab', 'restockTab', 
+    'quickItemsAdminTab', 'salesReportTab', 'expensesReportTab', 'profitsReportTab',
+    'shiftsTab', 'invoicesTab', 'lowStockTab'
+];
+
+function hideAllAdminTabs() {
+    allAdminTabs.forEach(tabId => {
+        const tab = document.getElementById(tabId);
+        if (tab) tab.style.display = 'none';
+    });
+}
+
+function hideAllModals() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+    });
+}
+
+// ==========================================
+// 5. دالة الأكورديون للقائمة الجانبية
+// ==========================================
+function toggleAccordion(titleBtn) {
+    const group = titleBtn.closest('.nav-group');
+    if (!group) return;
+    group.classList.toggle('open');
+}
+
+window.toggleAccordion = toggleAccordion;
+
+// ==========================================
+// ✅ 6. نظام الفحص السحابي (Cloud Verification)
+// ==========================================
+async function enforceCloudSubscriptionLogic() {
+    try {
+        const [proResponse, maxResponse] = await Promise.all([
+            fetch(`${API_BASE_URL}/api/codes/check-subscription`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ client_name: GLOBAL_CLIENT_NAME, site_type: 'PRO' })
+            }).catch(() => null),
+            fetch(`${API_BASE_URL}/api/codes/check-subscription`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ client_name: GLOBAL_CLIENT_NAME, site_type: 'MAX' })
+            }).catch(() => null)
+        ]);
+
+        let isProValid = false;
+        let isMaxValid = false;
+        let proDays = 0;
+
+        if (proResponse && proResponse.ok) {
+            const proData = await proResponse.json();
+            isProValid = proData.active && proData.remaining_days > 0;
+            proDays = proData.remaining_days || 0;
+        }
+
+        // 🚨 الطرد الإجباري إذا انتهى اشتراك PRO
+        if (!isProValid) {
+            window.location.href = "subscribe.html";
+            return;
+        }
+      
+        // ✅ تحديث الشارة
+        updateSubscriptionUI(proDays);
+
+        if (maxResponse && maxResponse.ok) {
+            const maxData = await maxResponse.json();
+            isMaxValid = maxData.active && maxData.remaining_days > 0;
+        }
+
+        // 🚨 إخفاء عنصر MAX من القائمة إذا لم يكن مجدداً
+        const maxSidebarItem = document.getElementById('navLitePosBtn');
+        if (maxSidebarItem) {
+            maxSidebarItem.style.display = isMaxValid ? '' : 'none';
+        }
+
+        // ✅ إخفاء القائمة السريعة بشكل افتراضي
+        const quickItemsGrid = document.getElementById('quickItemsGrid');
+        if (quickItemsGrid) quickItemsGrid.style.display = 'none';
+
+    } catch (error) {
+        console.error("Subscription validation integration error.");
+    }
+}
+
+function updateSubscriptionUI(proDays) {
+    const badge = document.getElementById('subscriptionBadge');
+    const daysText = document.getElementById('remainingDaysText');
+    
+    if (!badge || !daysText) return;
+    
+    badge.style.display = 'inline-flex';
+    badge.style.cursor = 'pointer';
+    badge.onclick = function() {
+        window.location.href = 'subscribe.html';
+    };
+    
+    if (proDays > 3) {
+        badge.className = 'subscription-badge-mini active-subscription';
+        daysText.textContent = `${proDays} يوم`;
+    } else if (proDays >= 1 && proDays <= 3) {
+        badge.className = 'subscription-badge-mini warning-subscription';
+        daysText.textContent = `⚠️ ${proDays}`;
+        
+        document.getElementById('warningDaysLeft').textContent = proDays;
+        document.getElementById('subscriptionWarningModal').style.display = 'flex';
+    } else if (proDays <= 0) {
+        badge.className = 'subscription-badge-mini expired-subscription';
+        daysText.textContent = '❌ منتهي';
+        
+        setTimeout(() => {
+            window.location.href = 'subscribe.html';
+        }, 3000);
+        
+        alert("❌ انتهت صلاحية اشتراكك. سيتم توجيهك لصفحة التجديد.");
+    }
+}
+
+// ==========================================
+// ✅ 7. الزر العائم للكاميرا (Floating Camera Button)
+// ==========================================
+function initFloatingButton() {
+    if (!document.getElementById('posSection')) return;
+    if (document.getElementById('floatingCameraBtn')) return;
+    
+    const floatBtn = document.createElement('button');
+    floatBtn.id = 'floatingCameraBtn';
+    floatBtn.innerHTML = '📷';
+    
+    const savedStyles = JSON.parse(localStorage.getItem('floatingBtnStyles'));
+    if (savedStyles) {
+        floatBtn.style.cssText = savedStyles;
+    } else {
+        floatBtn.style.cssText = 'position: fixed; bottom: 80px; right: 20px; z-index: 400; width: 56px; height: 56px; border-radius: 50%; background: #2563eb; color: white; border: none; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: none;';
+    }
+    
+    document.body.appendChild(floatBtn);
+
+    floatBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('startCameraBtn')?.click();
+    });
+
+    let pressTimer;
+    let isDragging = false;
+
+    floatBtn.addEventListener('touchstart', (e) => {
+        pressTimer = setTimeout(() => {
+            isDragging = true;
+            floatBtn.style.transition = 'none';
+            floatBtn.style.opacity = '0.8';
+        }, 3000);
+    });
+
+    floatBtn.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        floatBtn.style.left = 'auto';
+        floatBtn.style.top = (touch.clientY - 28) + 'px';
+        floatBtn.style.right = (window.innerWidth - touch.clientX - 28) + 'px';
+    });
+
+    floatBtn.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+        if (isDragging) {
+            isDragging = false;
+            floatBtn.style.opacity = '1';
+            localStorage.setItem('floatingBtnStyles', JSON.stringify(floatBtn.style.cssText));
+        }
+    });
+}
+
+// ==========================================
+// ✅ 8. إصلاح زر وضع المسح (Scan Mode Toggle)
+// ==========================================
+function initScanModeToggle() {
+    const toggleCheckbox = document.getElementById('autoCloseCameraCheckbox');
+    if (!toggleCheckbox) return;
+    
+    const savedMode = localStorage.getItem('scanMode');
+    if (savedMode !== null) {
+        toggleCheckbox.checked = savedMode === 'multi';
+    }
+    
+    toggleCheckbox.addEventListener('change', () => {
+        localStorage.setItem('scanMode', toggleCheckbox.checked ? 'multi' : 'single');
+    });
+}
+
+// ==========================================
+// ✅ 9. زر إظهار/إخفاء القائمة السريعة
+// ==========================================
+function initQuickItemsToggle() {
+    const toggleBtn = document.getElementById('toggleQuickItemsBtn');
+    const quickGrid = document.getElementById('quickItemsGrid');
+    if (!toggleBtn || !quickGrid) return;
+    
+    toggleBtn.addEventListener('click', () => {
+        if (quickGrid.style.display === 'none' || quickGrid.style.display === '') {
+            quickGrid.style.display = 'grid';
+            toggleBtn.style.background = 'var(--primary)';
+            toggleBtn.style.color = 'white';
+            toggleBtn.style.borderColor = 'var(--primary)';
+        } else {
+            quickGrid.style.display = 'none';
+            toggleBtn.style.background = 'var(--light-bg)';
+            toggleBtn.style.color = 'var(--text-secondary)';
+            toggleBtn.style.borderColor = 'var(--border-color)';
+        }
+    });
+}
+// ==========================================
+// 10. التنقل بين شاشة البيع والإدارة
+// ==========================================
+navPosBtn?.addEventListener('click', () => {
+    posSection.style.display = 'block';
+    adminSection.style.display = 'none';
+    updateSidebarActive('navPosBtn');
+    
+    if (!currentShift.active) {
+        startShiftModal.style.display = 'flex';
+    } else {
+        document.getElementById('barcodeInput')?.focus();
+        loadQuickItems();
+    }
+    closeSidebar();
+});
+
+navAdminBtn?.addEventListener('click', () => {
+    if (isAdminLoggedIn) {
+        posSection.style.display = 'none';
+        adminSection.style.display = 'block';
+        updateSidebarActive('navAdminBtn');
+        hideAllAdminTabs();
+        document.getElementById('inventoryTab').style.display = 'block';
+        document.getElementById('adminSubMenu').style.display = 'block';
+        updateSidebarActive('navInventoryBtn');
+        loadInventory();
+        closeSidebar();
+    } else {
+        authModal.style.display = 'flex';
+        document.getElementById('adminPasswordInput').focus();
+        closeSidebar();
+    }
+});
+
+document.getElementById('openAdminFromShiftBtn')?.addEventListener('click', () => {
+    startShiftModal.style.display = 'none';
+    authModal.style.display = 'flex';
+    document.getElementById('adminPasswordInput').focus();
+});
+
+document.getElementById('closeAuthBtn')?.addEventListener('click', () => {
+    authModal.style.display = 'none';
+    document.getElementById('adminPasswordInput').value = '';
+    if (!currentShift.active && posSection.style.display !== 'none') {
+        startShiftModal.style.display = 'flex';
+    }
+});
+
+document.getElementById('verifyAdminBtn')?.addEventListener('click', verifyPassword);
+document.getElementById('adminPasswordInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') verifyPassword();
+});
+
+function verifyPassword() {
+    const input = document.getElementById('adminPasswordInput').value;
+    if (input === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
+        authModal.style.display = 'none';
+        posSection.style.display = 'none';
+        adminSection.style.display = 'block';
+        updateSidebarActive('navAdminBtn');
+        document.getElementById('adminPasswordInput').value = '';
+        hideAllAdminTabs();
+        document.getElementById('inventoryTab').style.display = 'block';
+        document.getElementById('adminSubMenu').style.display = 'block';
+        updateSidebarActive('navInventoryBtn');
+        loadInventory();
+        window.playSound('success');
+    } else {
+        alert("كلمة المرور غير صحيحة!");
+        window.playSound('error');
+    }
+}
+
+function switchAdminTab(tabId, buttonId) {
+    if (!isAdminLoggedIn) {
+        authModal.style.display = 'flex';
+        document.getElementById('adminPasswordInput').focus();
+        return;
+    }
+    
+    hideAllAdminTabs();
+    const tab = document.getElementById(tabId);
+    if (tab) tab.style.display = 'block';
+    
+    updateSidebarActive(buttonId);
+    
+    switch(tabId) {
+        case 'inventoryTab': loadInventory(); break;
+        case 'cashiersTab': loadCashiers(); break;
+        case 'statsTab': loadStats(); break;
+        case 'quickItemsAdminTab': loadQuickItemsAdmin(); break;
+        case 'salesReportTab': loadSalesReport(); break;
+        case 'expensesReportTab': loadExpensesReport(); break;
+        case 'profitsReportTab': loadProfitsReport(); break;
+        case 'shiftsTab': loadShifts(); break;
+        case 'invoicesTab': loadInvoices(); break;
+        case 'lowStockTab': loadLowStock(); break;
+        case 'restockTab': 
+            document.getElementById('restockForm')?.reset();
+            const rpn = document.getElementById('restockProdName');
+            if (rpn) { rpn.value = ''; rpn.dataset.productId = ''; }
+            break;
+    }
+}
+
+const navMappings = {
+    'navInventoryBtn': ['inventoryTab', 'navInventoryBtn'],
+    'navExpensesBtn': ['expensesTab', 'navExpensesBtn'],
+    'navCashiersBtn': ['cashiersTab', 'navCashiersBtn'],
+    'navStatsBtn': ['statsTab', 'navStatsBtn'],
+    'navRestockBtn': ['restockTab', 'navRestockBtn'],
+    'navQuickItemsAdminBtn': ['quickItemsAdminTab', 'navQuickItemsAdminBtn'],
+    'navSalesReportBtn': ['salesReportTab', 'navSalesReportBtn'],
+    'navExpensesReportBtn': ['expensesReportTab', 'navExpensesReportBtn'],
+    'navProfitsReportBtn': ['profitsReportTab', 'navProfitsReportBtn'],
+    'navShiftsBtn': ['shiftsTab', 'navShiftsBtn'],
+    'navInvoicesBtn': ['invoicesTab', 'navInvoicesBtn'],
+    'navLowStockBtn': ['lowStockTab', 'navLowStockBtn'],
+    'navQuickItemsFromInventoryBtn': ['quickItemsAdminTab', 'navQuickItemsFromInventoryBtn']
+};
+
+Object.entries(navMappings).forEach(([btnId, [tabId, activeId]]) => {
+    document.getElementById(btnId)?.addEventListener('click', () => {
+        switchAdminTab(tabId, activeId);
+        closeSidebar();
+    });
+});
+
+document.getElementById('navCashierExpBtn')?.addEventListener('click', () => {
+    if (!currentShift.active) return alert("لا توجد وردية مفتوحة!");
+    document.getElementById('cashierExpenseModal').style.display = 'flex';
+    closeSidebar();
+});
+
+// ==========================================
+// 11. إدارة الوردية
+// ==========================================
+document.getElementById('startShiftBtn')?.addEventListener('click', async () => {
+    const name = document.getElementById('cashierNameInput').value.trim();
+    const pass = document.getElementById('cashierPasswordInput').value.trim();
+    const startCash = parseFloat(document.getElementById('startCashInput').value);
+
+    if (!name || !pass || isNaN(startCash)) return alert("برجاء استكمال جميع البيانات!");
+
+    const btn = document.getElementById('startShiftBtn');
+    btn.innerText = "جاري التحقق...";
+    btn.disabled = true;
+
+    try {
+        const q = query(collection(db, "cashiers"), where("name", "==", name), where("password", "==", pass));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            alert("اسم الكاشير أو كلمة المرور غير صحيحة!");
+            window.playSound('error');
+        } else {
+            currentShift = {
+                active: true, cashierName: name, startCash: startCash,
+                sales: 0, drops: 0, cashierExpenses: 0, startTime: new Date().toISOString()
+            };
+            localStorage.setItem('activeShift', JSON.stringify(currentShift));
+            startShiftModal.style.display = 'none';
+            document.getElementById('shiftInfoDisplay').innerText = `الكاشير: ${name} | العهدة: ${startCash} ج`;
+            window.playSound('success');
+            document.getElementById('barcodeInput')?.focus();
+            loadQuickItems();
+        }
+    } catch (e) {
+        alert("حدث خطأ في الاتصال.");
+    } finally {
+        btn.innerText = "استلام الوردية";
+        btn.disabled = false;
+    }
+});
+
+document.getElementById('navCashDropBtn')?.addEventListener('click', () => {
+    if (!currentShift.active) return alert("لا توجد وردية مفتوحة!");
+    if (!isAdminLoggedIn) return alert("يجب تسجيل دخول المدير أولاً!");
+    document.getElementById('cashDropModal').style.display = 'flex';
+    closeSidebar();
+});
+document.getElementById('closeDropBtn')?.addEventListener('click', () => document.getElementById('cashDropModal').style.display = 'none');
+
+document.getElementById('confirmDropBtn')?.addEventListener('click', () => {
+    if (!isAdminLoggedIn) return alert("يجب تسجيل دخول المدير أولاً!");
+    const amount = parseFloat(document.getElementById('dropAmountInput').value);
+    const pass = document.getElementById('dropAdminPassword').value;
+    if (isNaN(amount) || amount <= 0 || !pass) return alert("بيانات غير صحيحة");
+    
+    const available = currentShift.startCash + currentShift.sales - currentShift.drops - (currentShift.cashierExpenses || 0);
+    if (amount > available) return alert(`الرصيد المتاح (${available} ج) لا يكفي`);
+    if (pass !== ADMIN_PASSWORD) return alert("كلمة مرور المدير غير صحيحة!");
+    
+    currentShift.drops += amount;
+    localStorage.setItem('activeShift', JSON.stringify(currentShift));
+    alert(`تم تسليم ${amount} ج بنجاح`);
+    document.getElementById('cashDropModal').style.display = 'none';
+    document.getElementById('dropAmountInput').value = '';
+    document.getElementById('dropAdminPassword').value = '';
+    window.playSound('success');
+});
+
+document.getElementById('confirmCashierExpBtn')?.addEventListener('click', async () => {
+    const title = document.getElementById('cashierExpTitle').value.trim();
+    const amount = parseFloat(document.getElementById('cashierExpAmount').value);
+    if (!title || isNaN(amount) || amount <= 0) return alert("بيانات غير صحيحة");
+    
+    const available = currentShift.startCash + currentShift.sales - currentShift.drops - (currentShift.cashierExpenses || 0);
+    if (amount > available) return alert(`الرصيد المتاح (${available} ج) لا يكفي`);
+    
+    currentShift.cashierExpenses += amount;
+    localStorage.setItem('activeShift', JSON.stringify(currentShift));
+    try { await addDoc(collection(db, "cashierExpenses"), { title, amount, cashier: currentShift.cashierName, timestamp: new Date().toISOString() }); } catch(e) {}
+    
+    document.getElementById('cashierExpenseModal').style.display = 'none';
+    document.getElementById('cashierExpTitle').value = '';
+    document.getElementById('cashierExpAmount').value = '';
+    alert(`تم تسجيل ${title} بقيمة ${amount} ج`);
+    window.playSound('success');
+});
+document.getElementById('closeCashierExpBtn')?.addEventListener('click', () => document.getElementById('cashierExpenseModal').style.display = 'none');
+
+document.getElementById('navEndShiftBtn')?.addEventListener('click', () => {
+    if (!currentShift.active) return alert("لا توجد وردية مفتوحة!");
+    document.getElementById('reportStartCash').innerText = currentShift.startCash;
+    document.getElementById('reportSales').innerText = currentShift.sales;
+    document.getElementById('reportDrops').innerText = currentShift.drops;
+    document.getElementById('reportCashierExpenses').innerText = currentShift.cashierExpenses || 0;
+    document.getElementById('reportExpectedCash').innerText = currentShift.startCash + currentShift.sales - currentShift.drops - (currentShift.cashierExpenses || 0);
+    document.getElementById('endShiftModal').style.display = 'flex';
+    closeSidebar();
+});
+document.getElementById('closeEndShiftBtn')?.addEventListener('click', () => document.getElementById('endShiftModal').style.display = 'none');
+
+document.getElementById('confirmEndShiftBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('confirmEndShiftBtn');
+    btn.innerText = "جاري الحفظ...";
+    btn.disabled = true;
+    try {
+        const expected = currentShift.startCash + currentShift.sales - currentShift.drops - (currentShift.cashierExpenses || 0);
+        const actualInput = prompt("النقدية الفعلية بالدرج:", expected);
+        const actual = parseFloat(actualInput) || expected;
+        const diff = actual - expected;
+        
+        await addDoc(collection(db, "shifts"), {
+            ...currentShift, endTime: new Date().toISOString(),
+            actualCash: actual, expectedCash: expected, difference: diff,
+            status: diff >= 0 ? 'زيادة' : 'عجز'
+        });
+        
+        currentShift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0, startTime: null };
+        localStorage.removeItem('activeShift');
+        document.getElementById('shiftInfoDisplay').innerText = '';
+        document.getElementById('endShiftModal').style.display = 'none';
+        startShiftModal.style.display = 'flex';
+        document.getElementById('cashierPasswordInput').value = '';
+        document.getElementById('startCashInput').value = '';
+        window.playSound('success');
+        alert(`تم التقفيل. ${diff >= 0 ? 'زيادة' : 'عجز'}: ${Math.abs(diff)} ج`);
+    } catch(e) {
+        alert("خطأ في الحفظ");
+    } finally {
+        btn.innerText = "إنهاء الوردية وبدء وردية جديدة";
+        btn.disabled = false;
+    }
+});
+
+// ==========================================
+// 12. المخزن
+// ==========================================
+document.getElementById('addProductForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.innerText = "جاري الإضافة...";
+    btn.disabled = true;
+    try {
+        await addDoc(collection(db, "products"), {
+            barcode: document.getElementById('prodBarcode').value,
+            name: document.getElementById('prodName').value,
+            buyPrice: parseFloat(document.getElementById('prodBuyPrice').value),
+            sellPrice: parseFloat(document.getElementById('prodSellPrice').value),
+            quantity: parseInt(document.getElementById('prodQty').value),
+            minAlert: parseInt(document.getElementById('prodMinAlert').value),
+            image: "",
+            searchKey: [normalizeText(document.getElementById('prodName').value), normalizeText(document.getElementById('prodBarcode').value)]
+        });
+        alert("تمت الإضافة!");
+        document.getElementById('addProductForm').reset();
+        loadInventory();
+    } catch(e) { alert("خطأ: " + e.message); }
+    finally { btn.innerText = "إضافة / تحديث المنتج"; btn.disabled = false; }
+});
+
+async function loadInventory() {
+    const tbody = document.getElementById('inventoryBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6">جاري التحميل...</td></tr>';
+    try {
+        const snap = await getDocs(collection(db, "products"));
+        productsList = [];
+        tbody.innerHTML = '';
+        snap.forEach(doc => {
+            let p = doc.data(); p.id = doc.id;
+            if (p.quantity === -99999) return;
+            productsList.push(p);
+            tbody.innerHTML += `<tr class="${p.quantity <= p.minAlert ? 'low-stock' : ''}">
+                <td>${p.barcode}</td><td>${p.name}</td><td>${p.quantity}</td>
+                <td>${p.buyPrice}</td><td>${p.sellPrice}</td>
+                <td><button onclick="window.editProduct('${p.id}')" class="btn-sm btn-outline-primary" style="margin-left:4px;">تعديل</button>
+                <button onclick="window.deleteProduct('${p.id}')" class="btn-sm" style="background:var(--danger);color:white;">حذف</button></td></tr>`;
+        });
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="6">خطأ</td></tr>'; }
+}
+
+async function loadLowStock() {
+    const tbody = document.getElementById('lowStockBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="5">جاري التحميل...</td></tr>';
+    try {
+        const snap = await getDocs(collection(db, "products"));
+        tbody.innerHTML = '';
+        let has = false;
+        snap.forEach(doc => {
+            let p = doc.data();
+            if (p.quantity === -99999) return;
+            if (p.quantity <= p.minAlert) {
+                has = true;
+                tbody.innerHTML += `<tr class="low-stock"><td>${p.barcode}</td><td>${p.name}</td><td>${p.quantity}</td><td>${p.minAlert}</td><td>⚠️ ناقص</td></tr>`;
+            }
+        });
+        if (!has) tbody.innerHTML = '<tr><td colspan="5" style="color:var(--success);">✅ المخزون ممتاز</td></tr>';
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="5">خطأ</td></tr>'; }
+}
+
+window.editProduct = async function(id) {
+    const p = productsList.find(x => x.id === id);
+    if (!p) return alert("غير موجود");
+    const name = prompt("الاسم:", p.name);
+    if (!name) return;
+    const price = prompt("سعر البيع:", p.sellPrice);
+    if (!price) return;
+    try {
+        await updateDoc(doc(db, "products", id), { name, sellPrice: parseFloat(price), searchKey: [normalizeText(name), normalizeText(p.barcode || '')] });
+        alert("تم التعديل");
+        loadInventory();
+    } catch(e) { alert("خطأ"); }
+};
+
+window.deleteProduct = async function(id) {
+    if (confirm("حذف المنتج؟")) {
+        await updateDoc(doc(db, "products", id), { quantity: -99999 });
+        alert("تم الحذف");
+        loadInventory();
+    }
+};
+
+// ==========================================
+// 13. تزويد بضاعة
+// ==========================================
+async function lookupProductForRestock(barcode) {
+    const nameEl = document.getElementById('restockProdName');
+    const qtyEl = document.getElementById('restockAddQty');
+    if (!barcode) return;
+    const local = productsList.find(p => p.barcode === barcode && p.quantity !== -99999);
+    if (local) { nameEl.value = local.name; nameEl.dataset.productId = local.id; qtyEl.focus(); return; }
+    const snap = await getDocs(query(collection(db, "products"), where("barcode", "==", barcode), limit(1)));
+    if (!snap.empty) {
+        const p = snap.docs[0].data();
+        if (p.quantity === -99999) { alert("محذوف"); return; }
+        nameEl.value = p.name;
+        nameEl.dataset.productId = snap.docs[0].id;
+        qtyEl.focus();
+    } else alert("غير موجود");
+}
+
+document.getElementById('restockForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const barcode = document.getElementById('restockBarcode').value;
+    const addQty = parseInt(document.getElementById('restockAddQty').value);
+    const newBuy = parseFloat(document.getElementById('restockNewBuyPrice').value) || 0;
+    const newSell = parseFloat(document.getElementById('restockNewSellPrice').value) || 0;
+    if (isNaN(addQty) || addQty <= 0) return alert("كمية غير صالحة");
+    try {
+        const snap = await getDocs(query(collection(db, "products"), where("barcode", "==", barcode), limit(1)));
+        if (snap.empty) return alert("غير موجود");
+        const d = snap.docs[0], p = d.data();
+        if (p.quantity === -99999) return alert("محذوف");
+        let upd = { quantity: increment(addQty) };
+        if (newBuy > 0 && p.buyPrice > 0 && p.quantity > 0) {
+            upd.buyPrice = Math.round(((p.buyPrice * p.quantity + newBuy * addQty) / (p.quantity + addQty)) * 100) / 100;
+        } else if (newBuy > 0) upd.buyPrice = newBuy;
+        if (newSell > 0) upd.sellPrice = newSell;
+        await updateDoc(doc(db, "products", d.id), upd);
+        document.getElementById('restockForm').reset();
+        document.getElementById('restockProdName').value = '';
+        alert(`تم تزويد ${p.name}. الكمية: ${p.quantity + addQty}`);
+        loadInventory();
+    } catch(e) { alert("خطأ"); }
+});
 
 // ==========================================
 // 14. الكاشيرية
