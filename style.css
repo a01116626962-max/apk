@@ -292,8 +292,6 @@ header h1 {
     font-weight: 600;
 }
 
-.nav-item.direct-link { margin: 2px 0; }
-
 .admin-sub-menu {
     margin-right: 6px;
     border-right: 2px solid rgba(255, 255, 255, 0.1);
@@ -319,7 +317,7 @@ header h1 {
 .danger-btn:hover { background: rgba(239, 68, 68, 0.25) !important; color: #fecaca !important; }
 
 /* ==========================================
-   ✅ شارة الاشتراك المصغرة (بجانب كلمة القائمة)
+   شارة الاشتراك المصغرة
    ========================================== */
 .subscription-badge-mini {
     display: inline-flex;
@@ -362,31 +360,10 @@ header h1 {
     50% { opacity: 0.6; }
 }
 
-.subscription-badge-mini:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
-}
-
-/* مودال تحذير الاشتراك */
-.subscription-warning-modal .modal-content {
-    border: 2px solid #fca5a5;
-}
-
-.subscription-warning-modal .modal-content h2 {
-    color: var(--danger);
-}
-
-.subscription-warning-modal .warning-icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-}
-
-.subscription-warning-modal .days-left {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--danger);
-    margin: 10px 0;
-}
+.subscription-warning-modal .modal-content { border: 2px solid #fca5a5; }
+.subscription-warning-modal .modal-content h2 { color: var(--danger); }
+.subscription-warning-modal .warning-icon { font-size: 3rem; margin-bottom: 10px; }
+.subscription-warning-modal .days-left { font-size: 1.5rem; font-weight: 800; color: var(--danger); margin: 10px 0; }
 
 .sidebar-footer {
     padding: 12px 16px;
@@ -505,9 +482,7 @@ main {
     display: none;
 }
 
-.search-dropdown.active {
-    display: block;
-}
+.search-dropdown.active { display: block; }
 
 .search-dropdown-item {
     display: flex;
@@ -520,15 +495,8 @@ main {
     font-size: 0.85rem;
 }
 
-.search-dropdown-item:last-child {
-    border-bottom: none;
-}
-
-.search-dropdown-item:hover,
-.search-dropdown-item.selected {
-    background: var(--primary-bg);
-    color: var(--primary);
-}
+.search-dropdown-item:last-child { border-bottom: none; }
+.search-dropdown-item:hover { background: var(--primary-bg); color: var(--primary); }
 
 .search-dropdown-item .product-name {
     font-weight: 600;
@@ -537,10 +505,7 @@ main {
     gap: 6px;
 }
 
-.search-dropdown-item .product-price {
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-}
+.search-dropdown-item .product-price { color: var(--text-secondary); font-size: 0.78rem; }
 
 .priority-badge {
     display: inline-block;
@@ -555,7 +520,7 @@ main {
 .priority-3 { background: #eab308; }
 
 /* ==========================================
-   الزر العائم للكاميرا (Floating Camera Button)
+   الزر العائم للكاميرا
    ========================================== */
 #floatingCameraBtn {
     position: fixed;
@@ -575,9 +540,7 @@ main {
     font-size: 24px;
 }
 
-#floatingCameraBtn.show {
-    display: flex;
-}
+#floatingCameraBtn.show { display: flex; }
 
 #floatingCameraBtn .resize-handle {
     position: absolute;
@@ -591,12 +554,9 @@ main {
     border: 2px solid rgba(0,0,0,0.2);
 }
 
-#floatingCameraBtn:active {
-    transform: scale(0.9);
-    opacity: 0.8;
-}
-
-/* ✅ مفتاح التبديل (Toggle Switch) */
+/* ==========================================
+   Toggle Switch
+   ========================================== */
 .toggle-switch-label {
     position: relative;
     display: inline-flex;
@@ -642,9 +602,7 @@ main {
     border-color: var(--primary);
 }
 
-.toggle-switch-label input:checked + .toggle-switch::after {
-    right: 20px;
-}
+.toggle-switch-label input:checked + .toggle-switch::after { right: 20px; }
 
 .camera-container {
     display: none;
@@ -682,15 +640,8 @@ main {
 }
 
 .quick-items-grid button img { width: 28px; height: 28px; object-fit: contain; border-radius: 4px; }
+.quick-items-grid button:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.95); }
 
-.quick-items-grid button:active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: scale(0.95);
-}
-
-/* ✅ زر المنتجات السريعة */
 .show-popup-btn {
     width: 100%;
     padding: 10px;
@@ -711,16 +662,9 @@ main {
 /* ==========================================
    7. جدول السلة (Cart Table)
    ========================================== */
-.cart-area {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+.cart-area { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-}
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 
 th {
     background: var(--light-bg);
@@ -733,60 +677,35 @@ th {
     white-space: nowrap;
 }
 
-td {
-    padding: 9px 6px;
-    border-bottom: 1px solid var(--border-light);
-    vertical-align: middle;
-}
-
+td { padding: 9px 6px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 
-.empty-cart-msg {
-    text-align: center !important;
-    color: var(--text-muted);
-    padding: 24px !important;
-    font-size: 0.9rem;
-}
-
+.empty-cart-msg { text-align: center !important; color: var(--text-muted); padding: 24px !important; font-size: 0.9rem; }
 .qty-cell { display: inline-flex; align-items: center; justify-content: center; gap: 0; }
 
 .qty-btn {
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     border-radius: var(--radius-sm);
     border: 1.5px solid var(--border-color);
     background: white;
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 1rem; font-weight: 700;
     cursor: pointer;
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center; justify-content: center;
     color: var(--text-main);
     transition: var(--transition);
-    font-family: var(--font-main);
-    line-height: 1;
+    font-family: var(--font-main); line-height: 1;
 }
 
 .qty-btn:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.9); }
 
-.qty-value {
-    display: inline-block;
-    min-width: 32px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--text-main);
-}
+.qty-value { display: inline-block; min-width: 32px; text-align: center; font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
 
 .delete-btn {
-    background: var(--danger-bg);
-    color: var(--danger);
-    border: none;
-    padding: 5px 9px;
+    background: var(--danger-bg); color: var(--danger);
+    border: none; padding: 5px 9px;
     border-radius: var(--radius-sm);
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 0.7rem; font-weight: 700;
     cursor: pointer;
     font-family: var(--font-main);
     transition: var(--transition);
@@ -799,38 +718,24 @@ tr:last-child td { border-bottom: none; }
    8. فوتر الدفع (Sticky Checkout)
    ========================================== */
 .checkout-area {
-    position: sticky;
-    bottom: 0;
+    position: sticky; bottom: 0;
     background: var(--card-bg);
     padding: 14px 16px;
     margin: 4px -14px -14px -14px;
     border-top: 2px solid var(--border-color);
     box-shadow: 0 -8px 20px rgba(0,0,0,0.06);
-    z-index: 100;
-    text-align: center;
+    z-index: 100; text-align: center;
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
+.total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 1rem; font-weight: 600; }
 .total-amount { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
 
 #checkoutBtn {
     background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-    color: white;
-    width: 100%;
-    padding: 14px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: var(--radius);
+    color: white; width: 100%;
+    padding: 14px; font-size: 1.1rem; font-weight: 700;
+    border: none; border-radius: var(--radius);
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     font-family: var(--font-main);
@@ -845,27 +750,19 @@ tr:last-child td { border-bottom: none; }
    9. النوافذ المنبثقة (Modals)
    ========================================== */
 .modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    padding: 14px;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; padding: 14px;
 }
 
 .modal-content {
-    background: var(--card-bg);
-    padding: 22px 18px;
+    background: var(--card-bg); padding: 22px 18px;
     border-radius: var(--radius-lg);
-    text-align: center;
-    width: 100%;
-    max-width: 380px;
-    max-height: 85vh;
-    overflow-y: auto;
+    text-align: center; width: 100%; max-width: 380px;
+    max-height: 85vh; overflow-y: auto;
     box-shadow: var(--shadow-xl);
     animation: modalIn 0.25s ease;
 }
@@ -876,21 +773,16 @@ tr:last-child td { border-bottom: none; }
 }
 
 .modal-lg .modal-content { max-width: 600px; text-align: right; }
-
 .modal-content h2 { margin-bottom: 10px; font-size: 1.15rem; color: var(--text-main); }
 .modal-content p { font-size: 0.85rem; }
 
 .modal-content input,
 .modal-content select {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 9px;
+    width: 100%; padding: 10px 12px; margin-bottom: 9px;
     border: 2px solid var(--border-color);
     border-radius: var(--radius);
-    font-family: var(--font-main);
-    font-size: 0.88rem;
-    outline: none;
-    transition: var(--transition);
+    font-family: var(--font-main); font-size: 0.88rem;
+    outline: none; transition: var(--transition);
 }
 
 .modal-content input:focus,
@@ -908,34 +800,42 @@ tr:last-child td { border-bottom: none; }
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-top: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 4px;
 }
 
 .quick-popup-grid button {
     background: var(--light-bg);
     border: 2px solid var(--border-color);
-    padding: 12px 6px;
+    padding: 14px 8px;
     border-radius: var(--radius);
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    min-height: 90px;
+    gap: 8px;
+    min-height: 130px;
     font-family: var(--font-main);
     color: var(--text-main);
 }
 
-.quick-popup-grid button img { width: 45px; height: 45px; object-fit: contain; border-radius: 6px; }
+.quick-popup-grid button img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 8px;
+}
 
 .quick-popup-grid button:active {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 /* ==========================================
@@ -987,16 +887,12 @@ form select:focus {
    11. الأزرار (Buttons)
    ========================================== */
 .btn {
-    padding: 10px 16px;
-    border: none;
+    padding: 10px 16px; border: none;
     border-radius: var(--radius);
-    font-weight: 700;
-    cursor: pointer;
-    font-family: var(--font-main);
-    font-size: 0.88rem;
+    font-weight: 700; cursor: pointer;
+    font-family: var(--font-main); font-size: 0.88rem;
     transition: var(--transition);
-    display: inline-block;
-    text-align: center;
+    display: inline-block; text-align: center;
 }
 
 .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
@@ -1005,22 +901,16 @@ form select:focus {
 
 .btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: var(--primary-hover); }
-
 .btn-danger { background: var(--danger); color: white; }
 .btn-danger:hover { background: #dc2626; }
-
 .btn-cancel { background: var(--light-bg); color: var(--text-main); border: 1.5px solid var(--border-color); }
 .btn-cancel:hover { background: var(--border-color); }
-
 .btn-outline-primary { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
 .btn-outline-primary:hover { background: var(--primary-bg); }
-
 .btn-purple { background: var(--purple); color: white; }
 .btn-purple:hover { background: #7c3aed; }
-
 .btn-danger-outline { background: var(--danger-bg); color: var(--danger); border: 1.5px solid var(--danger); }
 .btn-danger-outline:hover { background: #fee2e2; }
-
 .btn-sm { padding: 7px 12px; font-size: 0.78rem; border-radius: var(--radius-sm); }
 .btn-block { width: 100%; display: block; margin-top: 6px; }
 
@@ -1035,128 +925,67 @@ form select:focus {
 }
 
 .stat-card {
-    background: var(--light-bg);
-    padding: 16px;
-    border-radius: var(--radius);
-    text-align: center;
+    background: var(--light-bg); padding: 16px;
+    border-radius: var(--radius); text-align: center;
     border-right: 4px solid var(--primary);
     box-shadow: var(--shadow-card);
 }
 
 .stat-card h4 { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 4px; }
 .stat-card p { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
-
 .stat-card:nth-child(2) { border-right-color: var(--danger); }
 .stat-card:nth-child(3) { border-right-color: var(--success); }
 
-/* ✅ كروت التقارير الذكية */
 .analytics-dashboard {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
+    gap: 16px; margin-top: 16px;
 }
 
 .dashboard-card {
-    background: var(--card-bg);
-    border-radius: var(--radius-lg);
-    padding: 18px;
-    box-shadow: var(--shadow-card);
+    background: var(--card-bg); border-radius: var(--radius-lg);
+    padding: 18px; box-shadow: var(--shadow-card);
     transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: flex; flex-direction: column; gap: 12px;
 }
 
 .dashboard-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-.dashboard-card .card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-.dashboard-card .card-header .header-icon { font-size: 1.3rem; }
-
+.dashboard-card .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
 .top-sellers-card .card-header { color: #065f46; }
 .top-sellers-card { border-top: 4px solid var(--success); }
-
 .dormant-card .card-header { color: #9a3412; }
 .dormant-card { border-top: 4px solid var(--warning); }
 
-.analytics-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
+.analytics-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .analytics-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 10px;
-    background: var(--light-bg);
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 10px; background: var(--light-bg);
+    border-radius: var(--radius-sm); font-size: 0.85rem;
     transition: var(--transition);
 }
-
 .analytics-list li:hover { background: var(--border-light); }
-
 .analytics-list .item-name { font-weight: 600; color: var(--text-main); }
 .analytics-list .item-stat { font-weight: 700; font-size: 0.9rem; }
-
-.top-sellers-card .item-stat {
-    color: var(--success);
-    background: var(--success-bg);
-    padding: 3px 10px;
-    border-radius: var(--radius-full);
-}
-
-.dormant-card .item-stat {
-    color: #9a3412;
-    background: var(--orange-light);
-    padding: 3px 10px;
-    border-radius: var(--radius-full);
-}
-
+.top-sellers-card .item-stat { color: var(--success); background: var(--success-bg); padding: 3px 10px; border-radius: var(--radius-full); }
+.dormant-card .item-stat { color: #9a3412; background: var(--orange-light); padding: 3px 10px; border-radius: var(--radius-full); }
 .analytics-empty { text-align: center; padding: 16px; color: var(--text-muted); font-size: 0.85rem; }
 
 /* ==========================================
    13. الفلاتر والصناديق المميزة
    ========================================== */
-.filter-bar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
 .filter-bar label { font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); }
-
 .filter-bar select {
-    padding: 8px 10px;
-    border-radius: var(--radius);
+    padding: 8px 10px; border-radius: var(--radius);
     border: 2px solid var(--border-color);
-    font-family: var(--font-main);
-    font-size: 0.85rem;
+    font-family: var(--font-main); font-size: 0.85rem;
     background: white;
 }
 
 .highlight-box {
-    background: var(--warning-bg);
-    border: 1.5px solid #fde68a;
-    padding: 12px;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
+    background: var(--warning-bg); border: 1.5px solid #fde68a;
+    padding: 12px; border-radius: var(--radius); margin-bottom: 12px;
 }
-
-.highlight-box h4 { margin-bottom: 8px; font-size: 0.9rem; }
 
 /* ==========================================
    14. أدوات مرنة (Flex Utilities)
@@ -1176,10 +1005,8 @@ form select:focus {
 
 .quick-admin-grid > div {
     border: 1.5px solid var(--border-color);
-    padding: 14px;
-    border-radius: var(--radius);
-    text-align: center;
-    background: white;
+    padding: 14px; border-radius: var(--radius);
+    text-align: center; background: white;
     transition: var(--transition);
 }
 
@@ -1196,76 +1023,41 @@ form select:focus {
    ========================================== */
 #shiftsTab table,
 #invoicesTab table {
-    border-collapse: separate;
-    border-spacing: 0;
-    background: var(--card-bg);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    table-layout: auto;
+    border-collapse: separate; border-spacing: 0;
+    background: var(--card-bg); border-radius: var(--radius-lg);
+    overflow: hidden; box-shadow: var(--shadow-card);
 }
 
 #shiftsTab th,
 #invoicesTab th {
-    background: #f8fafc;
-    color: var(--text-main);
-    font-size: 0.75rem;
-    font-weight: 700;
+    background: #f8fafc; color: var(--text-main);
+    font-size: 0.75rem; font-weight: 700;
     padding: 12px 10px;
     border-bottom: 2px solid var(--border-color);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
+    text-transform: uppercase; letter-spacing: 0.5px;
 }
 
 #shiftsTab td,
 #invoicesTab td {
-    padding: 10px;
-    font-size: 0.82rem;
+    padding: 10px; font-size: 0.82rem;
     border-bottom: 1px solid #f1f5f9;
 }
 
 #shiftsTab tr:last-child td,
-#invoicesTab tr:last-child td {
-    border-bottom: none;
-}
+#invoicesTab tr:last-child td { border-bottom: none; }
 
 #shiftsTab tr:hover,
-#invoicesTab tr:hover {
-    background: #f8fafc;
-    transition: background 0.2s ease;
-}
+#invoicesTab tr:hover { background: #f8fafc; transition: background 0.2s ease; }
 
 .shift-status-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 700;
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px; font-size: 0.72rem; font-weight: 700;
 }
 
-.shift-surplus {
-    background: #ecfdf5;
-    color: #059669;
-}
+.shift-surplus { background: #ecfdf5; color: #059669; }
+.shift-deficit { background: #fef2f2; color: #dc2626; }
 
-.shift-deficit {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-#invoicesTab .invoice-amount {
-    font-weight: 700;
-    color: var(--primary);
-}
-
-#invoicesTab .invoice-items-count {
-    background: var(--light-bg);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-}
+#invoicesTab .invoice-amount { font-weight: 700; color: var(--primary); }
 
 /* ==========================================
    18. تجاوب الجوال (Mobile Responsive)
@@ -1278,10 +1070,8 @@ form select:focus {
     .search-row { gap: 5px; }
     .icon-btn { width: 36px; height: 36px; }
     .analytics-dashboard { grid-template-columns: 1fr; }
-    #shiftsTab th,
-    #invoicesTab th { font-size: 0.7rem; padding: 8px 6px; }
-    #shiftsTab td,
-    #invoicesTab td { font-size: 0.75rem; padding: 8px 6px; }
+    #shiftsTab th, #invoicesTab th { font-size: 0.7rem; padding: 8px 6px; }
+    #shiftsTab td, #invoicesTab td { font-size: 0.75rem; padding: 8px 6px; }
 }
 
 @media (max-width: 400px) {
