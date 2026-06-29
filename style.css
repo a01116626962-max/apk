@@ -446,6 +446,7 @@ main {
 .search-input-wrapper {
     flex: 1;
     min-width: 150px;
+    position: relative;
 }
 
 .search-input-wrapper input {
@@ -485,21 +486,109 @@ main {
 .icon-btn:hover { background: var(--border-color); color: var(--text-main); }
 .icon-btn:active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(0.95); }
 
-/* ✅ الزر العائم للكاميرا (Floating Camera Button) */
+/* ==========================================
+   Dropdown البحث الذكي
+   ========================================== */
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-lg);
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 1100;
+    display: none;
+}
+
+.search-dropdown.active {
+    display: block;
+}
+
+.search-dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+    font-size: 0.85rem;
+}
+
+.search-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.search-dropdown-item:hover,
+.search-dropdown-item.selected {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.search-dropdown-item .product-name {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.search-dropdown-item .product-price {
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+}
+
+.priority-badge {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.priority-1 { background: #ef4444; }
+.priority-2 { background: #f97316; }
+.priority-3 { background: #eab308; }
+
+/* ==========================================
+   الزر العائم للكاميرا (Floating Camera Button)
+   ========================================== */
 #floatingCameraBtn {
     position: fixed;
-    z-index: 400;
+    z-index: 900;
     background: var(--primary);
     color: white;
     border: none;
     cursor: pointer;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     transition: none;
     user-select: none;
     -webkit-user-select: none;
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+#floatingCameraBtn.show {
+    display: flex;
+}
+
+#floatingCameraBtn .resize-handle {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    cursor: nwse-resize;
+    border: 2px solid rgba(0,0,0,0.2);
 }
 
 #floatingCameraBtn:active {
@@ -1103,53 +1192,79 @@ form select:focus {
 .low-stock { background-color: #fef2f2 !important; color: var(--danger); font-weight: 700; }
 
 /* ==========================================
-   17. تحسين جداول الورديات والفواتير
+   17. الورديات والفواتير - تصميم محسن
    ========================================== */
-#shiftsTab table tbody tr,
-#invoicesTab table tbody tr {
-    transition: all 0.2s ease;
+#shiftsTab table,
+#invoicesTab table {
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    table-layout: auto;
 }
 
-#shiftsTab table tbody tr:hover,
-#invoicesTab table tbody tr:hover {
+#shiftsTab th,
+#invoicesTab th {
     background: #f8fafc;
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 12px 10px;
+    border-bottom: 2px solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
-#shiftsTab table tbody td,
-#invoicesTab table tbody td {
-    padding: 11px 10px;
+#shiftsTab td,
+#invoicesTab td {
+    padding: 10px;
+    font-size: 0.82rem;
     border-bottom: 1px solid #f1f5f9;
 }
 
-#shiftsTab table tbody tr:last-child td,
-#invoicesTab table tbody tr:last-child td {
+#shiftsTab tr:last-child td,
+#invoicesTab tr:last-child td {
     border-bottom: none;
 }
 
-.shift-positive {
-    color: #10b981 !important;
+#shiftsTab tr:hover,
+#invoicesTab tr:hover {
+    background: #f8fafc;
+    transition: background 0.2s ease;
+}
+
+.shift-status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
     font-weight: 700;
 }
 
-.shift-negative {
-    color: #ef4444 !important;
-    font-weight: 700;
+.shift-surplus {
+    background: #ecfdf5;
+    color: #059669;
 }
 
-.invoice-detail-btn {
-    background: #eff6ff;
-    color: #2563eb;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 6px;
+.shift-deficit {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+#invoicesTab .invoice-amount {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+#invoicesTab .invoice-items-count {
+    background: var(--light-bg);
+    padding: 2px 8px;
+    border-radius: 12px;
     font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Cairo', sans-serif;
-}
-
-.invoice-detail-btn:hover {
-    background: #dbeafe;
+    color: var(--text-secondary);
 }
 
 /* ==========================================
@@ -1163,6 +1278,10 @@ form select:focus {
     .search-row { gap: 5px; }
     .icon-btn { width: 36px; height: 36px; }
     .analytics-dashboard { grid-template-columns: 1fr; }
+    #shiftsTab th,
+    #invoicesTab th { font-size: 0.7rem; padding: 8px 6px; }
+    #shiftsTab td,
+    #invoicesTab td { font-size: 0.75rem; padding: 8px 6px; }
 }
 
 @media (max-width: 400px) {
@@ -1172,4 +1291,4 @@ form select:focus {
     .total-amount { font-size: 1.2rem; }
     #checkoutBtn { font-size: 1rem; padding: 12px; }
     .analytics-dashboard { grid-template-columns: 1fr; }
-                     }
+   }
