@@ -40,6 +40,7 @@
                         <span class="nav-icon">🛒</span>
                         <span class="nav-label">شاشة البيع</span>
                     </button>
+                    <!-- ✅ رابط الصفحة المخففة (Lite) -->
                     <button id="navLitePosBtn" class="nav-item" onclick="window.location.href='lite.html'">
                         <span class="nav-icon">⚡</span>
                         <span class="nav-label">البيع السريع</span>
@@ -157,10 +158,12 @@
         <div class="pos-container">
             
             <div class="search-row">
-                <div class="search-input-wrapper" style="position: relative;">
-                    <input type="text" id="barcodeInput" placeholder="باركود أو بحث..." autofocus>
+                <div class="search-input-wrapper">
+                    <input type="text" id="barcodeInput" placeholder="مرر الباركود أو اكتب اسم المنتج..." autofocus>
+                    <div id="searchDropdown" class="search-dropdown" style="display: none;"></div>
                 </div>
                 <button id="startCameraBtn" class="icon-btn">📷</button>
+                <!-- ✅ Toggle Switch بدون نصوص -->
                 <label class="toggle-switch-label">
                     <input type="checkbox" id="autoCloseCameraCheckbox">
                     <span class="toggle-switch"></span>
@@ -169,7 +172,10 @@
             
             <div id="reader" class="camera-container"></div>
             
+            <!-- ✅ القائمة السريعة مخفية افتراضياً -->
             <div id="quickItemsGrid" class="quick-items-grid" style="display: none;"></div>
+            
+            <!-- ✅ زر Toggle للقائمة السريعة بدون نصوص -->
             <button id="toggleQuickItemsBtn" class="icon-btn" style="margin-top: 8px;">📋</button>
             
             <div class="cart-area">
@@ -196,6 +202,7 @@
 
     <!-- ========== المودالات ========== -->
     
+    <!-- دخول المدير -->
     <div id="authModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>🔐 دخول المدير</h2>
@@ -206,6 +213,7 @@
         </div>
     </div>
 
+    <!-- بدء وردية -->
     <div id="startShiftModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>🚀 بدء وردية جديدة</h2>
@@ -217,6 +225,7 @@
         </div>
     </div>
 
+    <!-- سحب نقدية -->
     <div id="cashDropModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>💵 تسليم نقدية للإدارة</h2>
@@ -227,6 +236,7 @@
         </div>
     </div>
 
+    <!-- مصروف كاشير -->
     <div id="cashierExpenseModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>🧾 مصروف كاشير (نثرية)</h2>
@@ -237,6 +247,7 @@
         </div>
     </div>
 
+    <!-- إنهاء وردية -->
     <div id="endShiftModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>📋 تقرير الوردية</h2>
@@ -253,6 +264,7 @@
         </div>
     </div>
 
+    <!-- القائمة السريعة المنبثقة -->
     <div id="quickItemsPopupModal" class="modal modal-lg" style="display: none;">
         <div class="modal-content">
             <h2>⭐ قائمة المنتجات السريعة</h2>
@@ -261,6 +273,7 @@
         </div>
     </div>
 
+    <!-- ✅ مودال تحذير الاشتراك -->
     <div id="subscriptionWarningModal" class="modal subscription-warning-modal" style="display: none;">
         <div class="modal-content">
             <div class="warning-icon">⚠️</div>
@@ -288,7 +301,13 @@
                 <input type="number" id="prodBuyPrice" placeholder="سعر الشراء">
                 <input type="number" id="prodSellPrice" placeholder="سعر البيع">
                 <input type="number" id="prodQty" placeholder="الكمية الحالية">
-                <input type="number" id="prodMinAlert" placeholder="حد التنبيه">
+                <input type="number" id="prodMinAlert" placeholder="حد التنبيه (مثال: 5)">
+                <select id="prodPriority">
+                    <option value="4">أولوية 4 - افتراضي (بدون علامة)</option>
+                    <option value="1">أولوية 1 - حمراء (أعلى)</option>
+                    <option value="2">أولوية 2 - برتقالية</option>
+                    <option value="3">أولوية 3 - صفراء</option>
+                </select>
                 <button type="submit" class="btn btn-primary form-full-width">إضافة / تحديث المنتج</button>
             </form>
             
@@ -300,8 +319,8 @@
             <h3>المنتجات المتوفرة</h3>
             <div style="overflow-x: auto;">
                 <table id="inventoryTable">
-                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية</th><th>سعر الشراء</th><th>سعر البيع</th><th>تعديل/حذف</th></tr></thead>
-                    <tbody id="inventoryBody"><tr><td colspan="6">جاري التحميل...</td></tr></tbody>
+                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية</th><th>سعر الشراء</th><th>سعر البيع</th><th>الأولوية</th><th>تعديل/حذف</th></tr></thead>
+                    <tbody id="inventoryBody"><tr><td colspan="7">جاري التحميل...</td></tr></tbody>
                 </table>
             </div>
         </section>
@@ -310,7 +329,7 @@
             <h3>⚠️ نواقص المخزون</h3>
             <div style="overflow-x: auto;">
                 <table>
-                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية</th><th>حد التنبيه</th><th>الحالة</th></tr></thead>
+                    <thead><tr><th>الباركود</th><th>المنتج</th><th>الكمية الحالية</th><th>حد التنبيه</th><th>الحالة</th></tr></thead>
                     <tbody id="lowStockBody"><tr><td colspan="5">جاري التحميل...</td></tr></tbody>
                 </table>
             </div>
@@ -377,56 +396,8 @@
         <section id="salesReportTab" style="display: none;"><h3>📊 المبيعات</h3><div class="filter-bar"><select id="salesFilter"><option value="all">الكل</option><option value="today">اليوم</option><option value="week">أسبوع</option><option value="month">شهر</option></select><button class="btn btn-sm btn-primary" onclick="loadSalesReport(document.getElementById('salesFilter').value)">تطبيق</button></div><table><thead><tr><th>التاريخ</th><th>الكاشير</th><th>المبلغ</th></tr></thead><tbody id="salesReportBody"></tbody></table></section>
         <section id="expensesReportTab" style="display: none;"><h3>📋 المصروفات</h3><div class="filter-bar"><select id="expensesFilter"><option value="all">الكل</option><option value="today">اليوم</option></select><button class="btn btn-sm btn-primary" onclick="loadExpensesReport(document.getElementById('expensesFilter').value)">تطبيق</button></div><div class="highlight-box"><div class="flex-row"><input type="text" id="expenseTitleReport" placeholder="البند" class="flex-2"><input type="number" id="expenseAmountReport" placeholder="المبلغ" class="flex-1"><button id="addExpenseFromReportBtn" class="btn btn-sm btn-primary">إضافة</button></div></div><table><thead><tr><th>التاريخ</th><th>البند</th><th>المبلغ</th></tr></thead><tbody id="expensesReportBody"></tbody></table></section>
         <section id="profitsReportTab" style="display: none;"><h3>💰 الأرباح</h3><div class="filter-bar"><select id="profitsFilter"><option value="all">الكل</option></select><button class="btn btn-sm btn-primary" onclick="loadProfitsReport(document.getElementById('profitsFilter').value)">تطبيق</button></div><table><thead><tr><th>المبيعات</th><th>التكلفة</th><th>الربح</th></tr></thead><tbody id="profitsReportBody"></tbody></table></section>
-        
-        <!-- ✅ قسم الورديات - شكل محسن -->
-        <section id="shiftsTab" style="display: none;">
-            <h3>🔄 سجل الورديات</h3>
-            <div style="overflow-x:auto;">
-                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                    <thead>
-                        <tr style="background:linear-gradient(135deg,#1e293b,#334155);color:white;">
-                            <th style="padding:12px 10px;text-align:right;">الكاشير</th>
-                            <th style="padding:12px 10px;text-align:right;">البداية</th>
-                            <th style="padding:12px 10px;text-align:right;">النهاية</th>
-                            <th style="padding:12px 10px;text-align:right;">العهدة</th>
-                            <th style="padding:12px 10px;text-align:right;">المبيعات</th>
-                            <th style="padding:12px 10px;text-align:right;">المسحوبات</th>
-                            <th style="padding:12px 10px;text-align:right;">المتوقع</th>
-                            <th style="padding:12px 10px;text-align:right;">الفرق</th>
-                        </tr>
-                    </thead>
-                    <tbody id="shiftsBody">
-                        <tr><td colspan="8" style="text-align:center;padding:20px;color:#94a3b8;">جاري التحميل...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ✅ قسم الفواتير - شكل محسن -->
-        <section id="invoicesTab" style="display: none;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <h3>🧾 الفواتير</h3>
-                <span style="background:#ecfdf5;color:#10b981;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85rem;">
-                    إجمالي: <span id="invoicesTotal">0 ج</span>
-                </span>
-            </div>
-            <div style="overflow-x:auto;">
-                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                    <thead>
-                        <tr style="background:linear-gradient(135deg,#1e293b,#334155);color:white;">
-                            <th style="padding:12px 10px;text-align:right;">التاريخ</th>
-                            <th style="padding:12px 10px;text-align:right;">الكاشير</th>
-                            <th style="padding:12px 10px;text-align:right;">الأصناف</th>
-                            <th style="padding:12px 10px;text-align:right;">الإجمالي</th>
-                            <th style="padding:12px 10px;text-align:center;">تفاصيل</th>
-                        </tr>
-                    </thead>
-                    <tbody id="invoicesBody">
-                        <tr><td colspan="5" style="text-align:center;padding:20px;color:#94a3b8;">جاري التحميل...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <section id="shiftsTab" style="display: none;"><h3>🔄 الورديات</h3><table><thead><tr><th>الكاشير</th><th>البداية</th><th>الفرق</th></tr></thead><tbody id="shiftsBody"></tbody></table></section>
+        <section id="invoicesTab" style="display: none;"><h3>🧾 الفواتير</h3><table><thead><tr><th>التاريخ</th><th>الإجمالي</th></tr></thead><tbody id="invoicesBody"></tbody></table></section>
 
     </main>
 
