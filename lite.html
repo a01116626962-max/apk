@@ -101,6 +101,13 @@
             border-color: #2563eb;
         }
 
+        .toggle-switch-label { position: relative; display: inline-flex; align-items: center; cursor: pointer; flex-shrink: 0; height: 28px; margin-right: 6px; }
+        .toggle-switch-label input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; background: #e2e8f0; border-radius: 9999px; transition: all 0.3s ease; border: 2px solid #e2e8f0; }
+        .toggle-switch::after { content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: white; top: 1px; right: 2px; transition: all 0.3s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .toggle-switch-label input:checked + .toggle-switch { background: #2563eb; border-color: #2563eb; }
+        .toggle-switch-label input:checked + .toggle-switch::after { right: 20px; }
+
         .lite-dropdown {
             position: absolute;
             top: 100%;
@@ -322,7 +329,6 @@
         #checkoutBtn:active { transform: scale(0.96); background: #059669; }
         #checkoutBtn:disabled { opacity: 0.5; transform: none; }
 
-        /* الزر العائم */
         #floatingCameraBtn {
             position: fixed;
             bottom: 80px;
@@ -355,6 +361,10 @@
         <div class="search-bar">
             <input type="text" id="barcodeInput" placeholder="باركود أو اسم المنتج..." autofocus>
             <button class="cam-btn" id="cameraBtn">📷</button>
+            <label class="toggle-switch-label" title="إغلاق الكاميرا تلقائياً بعد المسح">
+                <input type="checkbox" id="autoCloseLiteCheckbox" checked>
+                <span class="toggle-switch"></span>
+            </label>
         </div>
         
         <div id="reader"></div>
@@ -399,17 +409,49 @@
             return text.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z0-9\s]/g, '').trim().toLowerCase();
         }
 
+        function roundMoney(value) {
+            return Math.round(value * 100) / 100;
+        }
+
         let cart = [];
         let products = [];
         let quickItems = [];
         let catalog = {};
         let shift = { active: false, cashierName: "", startCash: 0, sales: 0, drops: 0, cashierExpenses: 0 };
+        let shiftDocId = null;
 
         async function loadCatalog() {
             try {
                 const snap = await getDoc(doc(db, "catalog", "products_list"));
                 if (snap.exists()) { catalog = snap.data(); }
             } catch(e) {}
+        }
+
+        async function loadShiftFromFirestore() {
+            try {
+                const lastCashier = JSON.parse(localStorage.getItem('lastCashierName') || 'null');
+                if (!lastCashier) return false;
+                
+                const snap = await getDoc(doc(db, "activeShifts", lastCashier));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    shiftDocId = lastCashier;
+                    shift = {
+                        active: true,
+                        cashierName: data.cashierName,
+                        startCash: data.startCash,
+                        sales: data.sales || 0,
+                        drops: data.drops || 0,
+                        cashierExpenses: data.cashierExpenses || 0,
+                        startTime: data.startTime
+                    };
+                    localStorage.setItem('activeShift', JSON.stringify(shift));
+                    return true;
+                }
+                return false;
+            } catch(e) {
+                return false;
+            }
         }
 
         async function init() {
@@ -429,6 +471,12 @@
                     document.getElementById('shiftLabel').innerText = 
                         shift.active ? `${shift.cashierName} | ${shift.startCash} ج` : 'لا توجد وردية';
                 } catch(e) {}
+            } else {
+                const loaded = await loadShiftFromFirestore();
+                if (loaded) {
+                    document.getElementById('shiftLabel').innerText = 
+                        `${shift.cashierName} | ${shift.startCash} ج`;
+                }
             }
 
             loadQuickItems();
@@ -503,42 +551,48 @@
                 el.innerHTML = '<div class="empty-cart">السلة فارغة</div>';
             } else {
                 el.innerHTML = cart.map((item, i) => {
-                    const st = item.sellPrice * item.cartQty;
-                    total += st;
+                    const st = roundMoney(item.sellPrice * item.cartQty);
+                    total = roundMoney(total + st);
                     return `<div class="cart-item">
                         <div style="flex:1;min-width:0;">
                             <div class="item-name">${item.name}</div>
                             <div class="item-price">${item.sellPrice} ج × ${item.cartQty}</div>
                         </div>
                         <div class="qty-control">
-                            <button class="qty-btn" data-i="${i}" data-d="-1">−</button>
+                            <button class="qty-btn" data-id="${item.id}" data-d="-1">−</button>
                             <span class="qty-num">${item.cartQty}</span>
-                            <button class="qty-btn" data-i="${i}" data-d="1">+</button>
+                            <button class="qty-btn" data-id="${item.id}" data-d="1">+</button>
                         </div>
                         <span class="item-total">${st} ج</span>
-                        <button class="del-btn" data-i="${i}">✕</button>
+                        <button class="del-btn" data-id="${item.id}">✕</button>
                     </div>`;
                 }).join('');
                 
                 el.querySelectorAll('.qty-btn').forEach(b => {
                     b.addEventListener('click', () => {
-                        const i = parseInt(b.dataset.i);
+                        const id = b.dataset.id;
                         const d = parseInt(b.dataset.d);
-                        const n = cart[i].cartQty + d;
-                        if (n > 0 && n <= cart[i].quantity) { cart[i].cartQty = n; renderCart(); }
-                        else if (n <= 0) { cart.splice(i, 1); renderCart(); }
+                        const item = cart.find(i => i.id === id);
+                        if (!item) return;
+                        const n = item.cartQty + d;
+                        if (n > 0 && n <= item.quantity) { item.cartQty = n; renderCart(); }
+                        else if (n <= 0) { removeFromCart(id); }
                         else alert("الكمية لا تكفي");
                     });
                 });
                 el.querySelectorAll('.del-btn').forEach(b => {
                     b.addEventListener('click', () => {
-                        cart.splice(parseInt(b.dataset.i), 1);
-                        renderCart();
+                        removeFromCart(b.dataset.id);
                     });
                 });
             }
             
             document.getElementById('totalDisplay').innerText = total;
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            renderCart();
         }
 
         document.getElementById('checkoutBtn').addEventListener('click', async () => {
@@ -551,8 +605,10 @@
 
             let ts = 0, tc = 0;
             const items = cart.map(i => {
-                ts += i.sellPrice * i.cartQty;
-                tc += i.buyPrice * i.cartQty;
+                const itemTotal = roundMoney(i.sellPrice * i.cartQty);
+                const itemCost = roundMoney(i.buyPrice * i.cartQty);
+                ts = roundMoney(ts + itemTotal);
+                tc = roundMoney(tc + itemCost);
                 return { productId: i.id, name: i.name, qty: i.cartQty, price: i.sellPrice };
             });
 
@@ -563,8 +619,12 @@
                 cart.forEach(i => batch.update(doc(db, "products", i.id), { quantity: increment(-i.cartQty) }));
                 await batch.commit();
 
-                shift.sales += ts;
+                shift.sales = roundMoney(shift.sales + ts);
                 localStorage.setItem('activeShift', JSON.stringify(shift));
+                
+                if (shiftDocId) {
+                    await updateDoc(doc(db, "activeShifts", shiftDocId), { sales: shift.sales });
+                }
                 
                 cart = [];
                 renderCart();
@@ -583,8 +643,12 @@
             const val = e.target.value.trim();
             if (!val) return;
             
+            if (window.liteBarcodeTimers && window.liteBarcodeTimers[val]) return;
+            window.liteBarcodeTimers = window.liteBarcodeTimers || {};
+            window.liteBarcodeTimers[val] = true;
+            setTimeout(() => delete window.liteBarcodeTimers[val], 500);
+
             const ns = normalizeText(val);
-            
             const local = products.find(p => (p.barcode === val || (p.searchKey && p.searchKey.includes(ns))) && p.quantity > 0);
             if (local) { addToCart({...local}); e.target.value = ''; hideDropdown(); return; }
             
@@ -678,35 +742,55 @@
         });
 
         let qrCode, camOpen = false;
-        document.getElementById('cameraBtn').addEventListener('click', () => {
+        
+        async function stopCamera() {
+            if (qrCode && camOpen) {
+                try {
+                    await qrCode.stop();
+                    await qrCode.clear();
+                } catch(e) {}
+                qrCode = null;
+                camOpen = false;
+                document.getElementById('reader').style.display = 'none';
+                document.getElementById('cameraBtn').innerHTML = '📷';
+            }
+        }
+
+        const liteAutoCloseCheckbox = document.getElementById('autoCloseLiteCheckbox');
+        const savedLiteMode = localStorage.getItem('liteAutoClose');
+        if (savedLiteMode !== null) {
+            liteAutoCloseCheckbox.checked = savedLiteMode === 'true';
+        }
+        liteAutoCloseCheckbox.addEventListener('change', () => {
+            localStorage.setItem('liteAutoClose', liteAutoCloseCheckbox.checked);
+        });
+
+        document.getElementById('cameraBtn').addEventListener('click', async () => {
             if (!window.Html5Qrcode) return alert("انتظر...");
             if (camOpen) {
-                qrCode.stop().then(() => {
-                    document.getElementById('reader').style.display = 'none';
-                    camOpen = false;
-                }).catch(() => {
-                    document.getElementById('reader').style.display = 'none';
-                    camOpen = false;
-                });
+                await stopCamera();
             } else {
                 document.getElementById('reader').style.display = 'block';
                 qrCode = new window.Html5Qrcode("reader");
-                qrCode.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 250, height: 100 } },
-                    (text) => {
-                        document.getElementById('barcodeInput').value = text;
-                        document.getElementById('barcodeInput').dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter' }));
-                        qrCode.stop().then(() => {
-                            document.getElementById('reader').style.display = 'none';
-                            camOpen = false;
-                        });
-                    },
-                    () => {}
-                ).then(() => { camOpen = true; }).catch((err) => {
+                try {
+                    await qrCode.start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: { width: 250, height: 100 } },
+                        async (text) => {
+                            document.getElementById('barcodeInput').value = text;
+                            document.getElementById('barcodeInput').dispatchEvent(new KeyboardEvent('keypress', { key: 'Enter' }));
+                            if (liteAutoCloseCheckbox.checked) {
+                                await stopCamera();
+                            }
+                        },
+                        () => {}
+                    );
+                    camOpen = true;
+                    document.getElementById('cameraBtn').innerHTML = '❌';
+                } catch(err) {
                     alert("تعذر فتح الكاميرا");
                     document.getElementById('reader').style.display = 'none';
-                });
+                }
             }
         });
 
